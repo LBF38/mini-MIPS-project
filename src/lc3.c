@@ -411,7 +411,16 @@ int main(int argc, const char *argv[])
             }
             case TRAP_PUTS:
             {
+                /* one char per word */
+                uint16_t* c = memory + reg[R_R0];
+                while (*c)
+                {
+                    putc((char)*c, stdout);
+                    ++c;
+                }
+                fflush(stdout);
             }
+            break;
             case TRAP_IN:
             {
                 printf("Enter a character: ");
@@ -420,8 +429,8 @@ int main(int argc, const char *argv[])
                 fflush(stdout);
                 reg[R_R0] = (uint16_t)c;
                 update_flags(R_R0);
-                break;
             }
+                break;
             case TRAP_PUTSP:
             {
                 /* one char per byte (two bytes per word)
@@ -450,11 +459,7 @@ int main(int argc, const char *argv[])
             }
         }
         case OP_RES:
-        {
-        }
         case OP_RTI:
-        {
-        }
         default:
         {
             abort();
