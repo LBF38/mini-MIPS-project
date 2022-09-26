@@ -1,8 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define NUM_REGS 4
-unsigned regs[NUM_REGS];
+#define HALT 0
+#define LOADI 1
+#define ADD 2
+#define SUB 3
+#define MULT 4
+#define DIV 5
+#define AND 6
+#define OR 7
+#define XOR 8
 
+
+
+
+unsigned regs[NUM_REGS];
 unsigned program[] = {0x1064, 0x11C8, 0x2201, 0x0000};
 
 /* program counter */
@@ -39,20 +52,45 @@ void eval()
 {
     switch (instrNum)
     {
-    case 0:
-        /* halt */
+    case HALT:
         printf("halt\n");
         running = 0;
         break;
-    case 1:
-        /* loadi */
+    case LOADI:
         printf("loadi r%d #%d\n", reg1, imm);
         regs[reg1] = imm;
         break;
-    case 2:
-        /* add */
+    case ADD:
         printf("add r%d r%d r%d\n", reg1, reg2, reg3);
         regs[reg1] = regs[reg2] + regs[reg3];
+        break;
+    case SUB:
+        printf("sub r%d r%d r%d\n", reg1, reg2, reg3);
+        regs[reg1] = regs[reg2] - regs[reg3];
+        break;
+    case MULT:
+        printf("mult r%d r%d r%d\n", reg1, reg2, reg3);
+        regs[reg1] = regs[reg2] * regs[reg3];
+        break;
+    case DIV:
+        printf("div r%d r%d r%d\n", reg1, reg2, reg3);
+        if (regs[reg3]==0){
+            fprintf(stderr,"error input: division by zero\n");
+            exit(-1);
+        }
+        regs[reg1] = regs[reg2] / regs[reg3];
+        break;
+    case AND:
+        printf("and r%d r%d r%d\n",reg1,reg2,reg3);
+        regs[reg1]=regs[reg2] && regs[reg3];
+        break;
+    case OR:
+        printf("or r%d r%d r%d\n",reg1,reg2,reg3);
+        regs[reg1]=regs[reg2] || regs[reg3];
+        break;
+    case XOR:
+        printf("xor r%d r%d r%d\n",reg1,reg2,reg3);
+        regs[reg1]=regs[reg2] ^ regs[reg3];
         break;
     }
 }
