@@ -62,6 +62,15 @@ enum
     OP_TRAP    /* execute trap */
 };
 
+// Memory Mapped Registers
+enum
+{
+    MR_KBSR = 0xFE00, /* keyboard status */
+    MR_KBDR = 0xFE02  /* keyboard data */
+};
+
+
+
 // Input Buffering
 struct termios original_tio;
 
