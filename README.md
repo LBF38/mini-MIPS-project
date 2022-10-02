@@ -4,6 +4,7 @@
 
 Projet concernant le cours d'Architecture des ordinateurs de l'ENSTA Bretagne.
 Création d'une Machine Virtuelle pour comprendre le fonctionnement des ordinateurs et leur architecture interne.
+Création d'un assembleur en python pour convertir des instructions rédigées en assembleur, en un fichier binaire à exécuter sur la VM.
 
 ## Ressources
 
