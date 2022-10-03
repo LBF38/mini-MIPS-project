@@ -29,7 +29,7 @@ def check_instruction(line):
     Example: can read instructions like "add r0, r1, r2"
     """
     switch={
-        "comment":"\s*#.*$",
+        "comment":["\s*#.*$",5],
         'addi':["^\s*(add)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",1],
     } # Définit les cas pour chaque instruction
     for value in switch.values():
