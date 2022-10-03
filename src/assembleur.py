@@ -3,8 +3,7 @@
 # Lecture de fichiers, vérification des expressions, convertir en binaire selon règles binaires.
 
 # Imports
-import re,sys
-from unicodedata import name
+import re
 
 
 def read_file(filename):
@@ -30,7 +29,8 @@ def check_instruction(line):
     Example: can read instructions like "add r0, r1, r2"
     """
     switch={
-        'add':["^\s*(add)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",1],
+        "comment":"\s*#.*$",
+        'addi':["^\s*(add)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",1],
     } # Définit les cas pour chaque instruction
     for value in switch.values():
         expression_string=value[0]

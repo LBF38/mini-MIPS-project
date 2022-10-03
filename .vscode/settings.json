@@ -1,3 +1,12 @@
 {
-    "makefile.makeDirectory": "src"
+    "makefile.makeDirectory": "src",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./src/tests",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true
 }
