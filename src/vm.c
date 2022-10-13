@@ -1,16 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NUM_REGS 4
-#define HALT 0
-#define LOADI 1
-#define ADD 2
-#define SUB 3
-#define MULT 4
-#define DIV 5
-#define AND 6
-#define OR 7
-#define XOR 8
+#include <vm.h>
 
 
 
