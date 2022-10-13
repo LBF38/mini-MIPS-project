@@ -10,7 +10,7 @@ import assembleur as asm
 
 class TestAssembleur(unittest.TestCase):
     def setUp(self):
-        self.add_instruction="add r0 r1 100"
+        self.add_instruction="addi r0 r1 100"
         self.commented_line="# this is a commented line"
         self.add_instruction_with_comment="add r0 r1 100 #this is a comment"
         self.writefile()
