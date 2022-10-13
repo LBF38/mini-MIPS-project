@@ -2,6 +2,13 @@
 # Utilisation de Regex pour vérifier les syntaxes par exemple.
 # Lecture de fichiers, vérification des expressions, convertir en binaire selon règles binaires.
 
+#TODO vérifier fonctionnement des fonctions pour l'opérateur ADD et ADDI
+#TODO tester le fichier binaire dans la VM / ISS.
+#TODO implémenter de nouvelles commandes simples (SUB, MULT, ...)
+#TODO gérer les labels
+#TODO implémenter de nouvelles commandes complexes (JUMP, B)
+
+
 # Imports
 import re
 import struct
@@ -17,14 +24,15 @@ def read_file(filename):
     return the_lines
 
 
-def search_in_file(the_lines):
+def assembling_file(the_lines):
     for line in the_lines:
         line.strip()
         # check which instruction is in the line
         instruction = check_instruction(line)
         # convert it to a binary code
-        convert_to_binary(instruction)
+        binary_instruction_list=encode_r(instruction)
         # store it into the output file
+        write_binary_file(binary_instruction_list)
 
 
 def check_instruction(line):
@@ -52,11 +60,10 @@ def check_instruction(line):
     # Mettre une erreur pour le non matching (non ?)
 
 
-def convert_to_binary(instruction: list):
+def encode_r(opcode, rd,rs, im):
     """
     Convert the recognized instruction into a binary instruction
     """
-    opcode, rd, rs, im = instruction
     opcode = opcode << 26
     rd = rd << 21
     rs = rs << 16
@@ -77,6 +84,7 @@ def write_binary_file(binary_instruction_list: list):
 
 if __name__ == "__main__":
     print("Testing the check function")
-    check_instruction("  add r0 r1 100")
-    instruction_bin = [convert_to_binary([1, 0, 1, 2])]
+    check_instruction("  addi r0 r1 100")
+    instruction_bin = [encode_r(3, 3, 4, 0)]
+    print(instruction_bin)
     write_binary_file(instruction_bin)
