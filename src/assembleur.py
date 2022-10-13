@@ -42,19 +42,42 @@ def check_instruction(line):
     """
     # Définit les cas pour chaque instruction
     switch = {
-        "comment": ["\s*#.*$", 5],
-        'add': ["^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)$", 1],
-        'addi': ["^\s*(addi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$", 2],
+        # "comment": ["\s*#.*$", 5],
+        'add': {
+            'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
+            'opcode': 2
+        },
+        'addi': {
+            'regex': "^\s*(addi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
+            'opcode': 3
+        },
+        'sub': {
+            'regex': "^\s*(sub)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
+            'opcode': 4
+        },
+        'subi': {
+            'regex': "^\s*(subi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
+            'opcode': 5
+        },
+        'mul': {
+            'regex': "^\s*(mul)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
+            'opcode': 6
+        },
+        'muli': {
+            'regex': "^\s*(muli)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
+            'opcode': 7
+        }
     }
-    for value in switch.values():
-        expression_string = value[0]
+    for case in switch.items():
+        key,value=case
+        expression_string = value['regex']
         expression = re.compile(expression_string)
         matching = expression.match(line)
         if matching:
-            print(f"match with: {value[1]}")
+            print(f"match with: {key} = {value['opcode']}")
             # print(f"print the group 1: {matching.group(1)}")
             # print(f"print the group 2: {matching.group(2)}")
-            return [value[1], matching.group(2), matching.group(3), matching.group(4)]
+            return [value['opcode'], matching.group(2), matching.group(3), matching.group(4)]
     print("no matching")
     return -1
     # Mettre une erreur pour le non matching (non ?)
