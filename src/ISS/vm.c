@@ -5,7 +5,6 @@
 
 
 
-
 unsigned regs[NUM_REGS];
 unsigned program[] = {0x1064, 0x11C8, 0x2201, 0x0000};
 

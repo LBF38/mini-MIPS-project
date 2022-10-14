@@ -1,0 +1,3 @@
+load r0
+load r1
+addi r0 r1 100
