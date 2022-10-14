@@ -1,6 +1,6 @@
+
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <vm.h>
 
 
@@ -110,5 +110,9 @@ void run()
 int main(int argc, const char *argv[])
 {
     run();
-    return 0;
+    int i;
+    for (i=0;i<argc;i++){
+        printf("argv[%d] = \"%s\" \n",i,argv[i]);
+    }
+    return EXIT_SUCCESS;
 }
