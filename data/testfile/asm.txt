@@ -1,3 +1,2 @@
-load r0
-load r1
-addi r0 r1 100
+addi r3 r4 0
+stop

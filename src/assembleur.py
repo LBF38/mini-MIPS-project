@@ -14,6 +14,11 @@ import re
 import struct
 
 
+def main(src, dest):
+    lines = read_file(src)
+    assembling_file(lines, dest)
+
+
 def read_file(filename):
     """
     Lit le fichier et renvoit les lignes du fichier    
@@ -24,15 +29,15 @@ def read_file(filename):
     return the_lines
 
 
-def assembling_file(the_lines):
+def assembling_file(the_lines, destination):
     for line in the_lines:
         line.strip()
         # check which instruction is in the line
-        opcode,arg1,arg2,arg3,format = check_instruction(line)
+        opcode, arg1, arg2, arg3, format = check_instruction(line)
         # convert it to a binary code
-        binary_instruction_list = encode(opcode,arg1,arg2,arg3,format)
+        binary_instruction_list = encode(opcode, arg1, arg2, arg3, format)
         # store it into the output file
-        write_binary_file(binary_instruction_list)
+        write_binary_file(binary_instruction_list, destination)
 
 
 def check_instruction(line):
@@ -42,76 +47,85 @@ def check_instruction(line):
     """
     # Définit les cas pour chaque instruction
     switch = {
-        # "comment": ["\s*#.*$", 5],
+        "comment": {
+            'regex': "\s*#.*$",
+            # 'opcode': 5,
+            # 'format': 'r'
+        },
         'add': {
             'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
             'opcode': 2,
-            'format':'r'
+            'format': 'r'
         },
         'addi': {
             'regex': "^\s*(addi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
             'opcode': 3,
-            'format':'i'
+            'format': 'i'
         },
         'sub': {
             'regex': "^\s*(sub)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
             'opcode': 4,
-            'format':'r'
+            'format': 'r'
         },
         'subi': {
             'regex': "^\s*(subi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
             'opcode': 5,
-            'format':'i'
+            'format': 'i'
         },
         'mul': {
             'regex': "^\s*(mul)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
             'opcode': 6,
-            'format':'r'
+            'format': 'r'
         },
         'muli': {
             'regex': "^\s*(muli)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
             'opcode': 7,
-            'format':'i'
+            'format': 'i'
         },
         'div': {
             'regex': "^\s*(div)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
             'opcode': 8,
-            'format':'r'
+            'format': 'r'
         },
         'divi': {
             'regex': "^\s*(divi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
             'opcode': 9,
-            'format':'i'
+            'format': 'i'
         },
         'and': {
             'regex': "^\s*(and)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
             'opcode': 10,
-            'format':'r'
+            'format': 'r'
         },
         'andi': {
             'regex': "^\s*(andi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
             'opcode': 11,
-            'format':'i'
+            'format': 'i'
         },
         'or': {
             'regex': "^\s*(or)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
             'opcode': 12,
-            'format':'r'
+            'format': 'r'
         },
         'ori': {
             'regex': "^\s*(ori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
             'opcode': 13,
-            'format':'i'
+            'format': 'i'
         },
         'xor': {
             'regex': "^\s*(xor)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
             'opcode': 14,
-            'format':'r'
+            'format': 'r'
         },
         'xori': {
             'regex': "^\s*(xori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
             'opcode': 15,
-            'format':'i'
+            'format': 'i'
+        },
+        'stop': {
+            'regex': "^\s*(stop)$",
+            'opcode': 35,
+            'format': 'h'
         },
     }
     for case in switch.items():
@@ -121,20 +135,31 @@ def check_instruction(line):
         matching = expression.match(line)
         if matching:
             print(f"match with: {key} = {value['opcode']}")
-            # print(f"print the group 1: {matching.group(1)}")
-            # print(f"print the group 2: {matching.group(2)}")
-            return value['opcode'], matching.group(2), matching.group(3), matching.group(4),value['format']
-    print("no matching")
-    return -1
+            format = value['format']
+            if format in 'ri':
+                return value['opcode'], int(matching.group(2)), int(matching.group(3)), int(matching.group(4)), value['format']
+            if format in 'jr ji b':
+                return value['opcode'], int(matching.group(2)), int(matching.group(3)), 0, value['format']
+            if format in 's':
+                return value['opcode'], int(matching.group(2)), 0, 0, value['format']
+            if format in 'h':
+                return value['opcode'], 0, 0, 0, value['format']
+    print("error input file : no matching instruction")
+    return exit(-1)
     # Mettre une erreur pour le non matching (non ?)
 
-def encode(opcode,arg1,arg2,arg3,format):
-    switch = {
-        'r':encode_r(opcode,arg1,arg2,arg3),
-        'i':encode_i(opcode,arg1,arg2,arg3)
-    }
-    return switch[format]
 
+def encode(opcode, arg1, arg2, arg3, format):
+    switch = {
+        'r': encode_r(opcode, arg1, arg2, arg3),
+        'i': encode_i(opcode, arg1, arg2, arg3),
+        'jr': encode_jr(opcode, arg1, arg2),
+        'ji': encode_ji(opcode, arg1, arg2),
+        'b': encode_b(opcode, arg1, arg2),
+        's': encode_s(opcode, arg1),
+        'h': encode_h(opcode)
+    }
+    return [switch[format]]
 
 
 def encode_r(opcode, rd, rs1, rs2):
@@ -213,19 +238,21 @@ def encode_h(opcode):
     return binary_instruction
 
 
-def write_binary_file(binary_instruction_list: list):
+def write_binary_file(binary_instruction_list: list, destination: str = "data/fichier.bin"):
     """
     Write the binary file for the given instruction
     """
-    out_file = open("fichier.bin", "wb")
+    out_file = open(destination, "ab")
     for value in binary_instruction_list:
         out_file.write(struct.pack("<L", value))
     out_file.close()
 
 
 if __name__ == "__main__":
-    print("Testing the check function")
-    check_instruction("  addi r0 r1 100")
-    instruction_bin = [encode(3, 5, 3, 4,'i')]
-    print(instruction_bin)
-    write_binary_file(instruction_bin)
+    # print("Testing the check function")
+    # check_instruction("  addi r0 r1 100")
+    # instruction_bin = encode(3, 5, 3, 4, 'i')
+    # print(instruction_bin)
+    # write_binary_file(instruction_bin)
+    print("Testing to assemble")
+    main("data/testfile/asm.txt", "data/fichier.bin")

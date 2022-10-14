@@ -44,4 +44,3 @@
 #define OPCODE_SCALL 34
 #define OPCODE_STOP 35
 
-/*  */
