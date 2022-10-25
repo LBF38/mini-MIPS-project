@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Ici, on définit les règles pour convertir les commandes assembleur en binaire.
 # Utilisation de Regex pour vérifier les syntaxes par exemple.
 # Lecture de fichiers, vérification des expressions, convertir en binaire selon règles binaires.
@@ -12,6 +13,7 @@
 # Imports
 import re
 import struct
+import sys
 
 
 def main(src, dest):
@@ -30,14 +32,16 @@ def read_file(filename):
 
 
 def assembling_file(the_lines, destination):
+    binary_instruction_list = []
     for line in the_lines:
         line.strip()
         # check which instruction is in the line
         opcode, arg1, arg2, arg3, format = check_instruction(line)
         # convert it to a binary code
-        binary_instruction_list = encode(opcode, arg1, arg2, arg3, format)
+        binary_instruction_list.append(
+            encode(opcode, arg1, arg2, arg3, format))
         # store it into the output file
-        write_binary_file(binary_instruction_list, destination)
+    write_binary_file(binary_instruction_list, destination)
 
 
 def check_instruction(line):
@@ -49,81 +53,81 @@ def check_instruction(line):
     switch = {
         "comment": {
             'regex': "\s*#.*$",
-            # 'opcode': 5,
-            # 'format': 'r'
+            'opcode': 99,
+            'format': 'r'
         },
         'add': {
-            'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
+            'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 2,
             'format': 'r'
         },
         'addi': {
-            'regex': "^\s*(addi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
+            'regex': "^\s*(addi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 3,
             'format': 'i'
         },
         'sub': {
-            'regex': "^\s*(sub)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
+            'regex': "^\s*(sub)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 4,
             'format': 'r'
         },
         'subi': {
-            'regex': "^\s*(subi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
+            'regex': "^\s*(subi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 5,
             'format': 'i'
         },
         'mul': {
-            'regex': "^\s*(mul)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
+            'regex': "^\s*(mul)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 6,
             'format': 'r'
         },
         'muli': {
-            'regex': "^\s*(muli)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
+            'regex': "^\s*(muli)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 7,
             'format': 'i'
         },
         'div': {
-            'regex': "^\s*(div)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
+            'regex': "^\s*(div)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 8,
             'format': 'r'
         },
         'divi': {
-            'regex': "^\s*(divi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
+            'regex': "^\s*(divi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 9,
             'format': 'i'
         },
         'and': {
-            'regex': "^\s*(and)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
+            'regex': "^\s*(and)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 10,
             'format': 'r'
         },
         'andi': {
-            'regex': "^\s*(andi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
+            'regex': "^\s*(andi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 11,
             'format': 'i'
         },
         'or': {
-            'regex': "^\s*(or)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
+            'regex': "^\s*(or)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 12,
             'format': 'r'
         },
         'ori': {
-            'regex': "^\s*(ori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
+            'regex': "^\s*(ori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 13,
             'format': 'i'
         },
         'xor': {
-            'regex': "^\s*(xor)\s+r(\d+)\s+r(\d+)\s+r(\d+)$",
+            'regex': "^\s*(xor)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 14,
             'format': 'r'
         },
         'xori': {
-            'regex': "^\s*(xori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)$",
+            'regex': "^\s*(xori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 15,
             'format': 'i'
         },
         'stop': {
-            'regex': "^\s*(stop)$",
+            'regex': "^\s*(stop)",
             'opcode': 35,
             'format': 'h'
         },
@@ -136,6 +140,10 @@ def check_instruction(line):
         if matching:
             print(f"match with: {key} = {value['opcode']}")
             format = value['format']
+            if key == "comment":
+                print("A comment has been recognized.")
+                print(f"This is the recognized line : {line}")
+                break
             if format in 'ri':
                 return value['opcode'], int(matching.group(2)), int(matching.group(3)), int(matching.group(4)), value['format']
             if format in 'jr ji b':
@@ -159,7 +167,7 @@ def encode(opcode, arg1, arg2, arg3, format):
         's': encode_s(opcode, arg1),
         'h': encode_h(opcode)
     }
-    return [switch[format]]
+    return switch[format]
 
 
 def encode_r(opcode, rd, rs1, rs2):
@@ -238,11 +246,12 @@ def encode_h(opcode):
     return binary_instruction
 
 
-def write_binary_file(binary_instruction_list: list, destination: str = "data/fichier.bin"):
+def write_binary_file(binary_instruction_list: list, destination: str = "bin/destination.bin"):
     """
     Write the binary file for the given instruction
     """
-    out_file = open(destination, "ab")
+    out_file = open(destination, "wb")
+    print(binary_instruction_list)
     for value in binary_instruction_list:
         out_file.write(struct.pack("<L", value))
     out_file.close()
@@ -255,4 +264,17 @@ if __name__ == "__main__":
     # print(instruction_bin)
     # write_binary_file(instruction_bin)
     print("Testing to assemble")
-    main("data/testfile/asm.txt", "data/fichier.bin")
+    try:
+        source = sys.argv[1]
+        # print(source)
+    except IndexError as error:
+        print("No source file given. Please provide a source file to assemble.")
+        # TODO : faire une fonction pour les usages du fichier et les options possibles.
+        print("Usage:  ...in the work...")
+        sys.exit(-1)
+    try:
+        destination = sys.argv[2]
+    except IndexError:
+        print("No output file given. Writing in the default file : bin/destination.bin\n")
+        destination = "bin/destination.bin"
+    main(source, destination)

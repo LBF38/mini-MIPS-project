@@ -1,2 +1,2 @@
-addi r3 r4 0
-stop
+addi r3 r4 5 # testing comment at the end of the line
+stop # stop the machine

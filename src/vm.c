@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <vm.h>
 
-
-
 unsigned regs[NUM_REGS];
 unsigned program[] = {0x1064, 0x11C8, 0x2201, 0x0000};
 
@@ -64,23 +62,24 @@ void eval()
         break;
     case DIV:
         printf("div r%d r%d r%d\n", reg1, reg2, reg3);
-        if (regs[reg3]==0){
-            fprintf(stderr,"error input: division by zero\n");
+        if (regs[reg3] == 0)
+        {
+            fprintf(stderr, "error input: division by zero\n");
             exit(-1);
         }
         regs[reg1] = regs[reg2] / regs[reg3];
         break;
     case AND:
-        printf("and r%d r%d r%d\n",reg1,reg2,reg3);
-        regs[reg1]=regs[reg2] && regs[reg3];
+        printf("and r%d r%d r%d\n", reg1, reg2, reg3);
+        regs[reg1] = regs[reg2] && regs[reg3];
         break;
     case OR:
-        printf("or r%d r%d r%d\n",reg1,reg2,reg3);
-        regs[reg1]=regs[reg2] || regs[reg3];
+        printf("or r%d r%d r%d\n", reg1, reg2, reg3);
+        regs[reg1] = regs[reg2] || regs[reg3];
         break;
     case XOR:
-        printf("xor r%d r%d r%d\n",reg1,reg2,reg3);
-        regs[reg1]=regs[reg2] ^ regs[reg3];
+        printf("xor r%d r%d r%d\n", reg1, reg2, reg3);
+        regs[reg1] = regs[reg2] ^ regs[reg3];
         break;
     }
 }
@@ -111,8 +110,10 @@ int main(int argc, const char *argv[])
 {
     run();
     int i;
-    for (i=0;i<argc;i++){
-        printf("argv[%d] = \"%s\" \n",i,argv[i]);
+    for (i = 0; i < argc; i++)
+    {
+        printf("argv[%d] = \"%s\" \n", i, argv[i]);
     }
+
     return EXIT_SUCCESS;
 }
