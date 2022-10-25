@@ -17,16 +17,97 @@ import sys
 
 
 class Assembly():
-    def __init__(self,src,dest) -> None:
-        print("This is the Assembly class to assemble files for a mini-MIPS Virtual Machine.\n")
-        self.read_file(src)
-        self.assembling_file(lines, dest)
+    instructionSwitch = {
+        "comment": {
+            'regex': "\s*#.*$",
+            'opcode': 99,
+            'format': 'r'
+        },
+        'add': {
+            'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 2,
+            'format': 'r'
+        },
+        'addi': {
+            'regex': "^\s*(addi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 3,
+            'format': 'i'
+        },
+        'sub': {
+            'regex': "^\s*(sub)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 4,
+            'format': 'r'
+        },
+        'subi': {
+            'regex': "^\s*(subi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 5,
+            'format': 'i'
+        },
+        'mul': {
+            'regex': "^\s*(mul)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 6,
+            'format': 'r'
+        },
+        'muli': {
+            'regex': "^\s*(muli)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 7,
+            'format': 'i'
+        },
+        'div': {
+            'regex': "^\s*(div)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 8,
+            'format': 'r'
+        },
+        'divi': {
+            'regex': "^\s*(divi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 9,
+            'format': 'i'
+        },
+        'and': {
+            'regex': "^\s*(and)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 10,
+            'format': 'r'
+        },
+        'andi': {
+            'regex': "^\s*(andi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 11,
+            'format': 'i'
+        },
+        'or': {
+            'regex': "^\s*(or)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 12,
+            'format': 'r'
+        },
+        'ori': {
+            'regex': "^\s*(ori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 13,
+            'format': 'i'
+        },
+        'xor': {
+            'regex': "^\s*(xor)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 14,
+            'format': 'r'
+        },
+        'xori': {
+            'regex': "^\s*(xori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 15,
+            'format': 'i'
+        },
+        'stop': {
+            'regex': "^\s*(stop)",
+            'opcode': 35,
+            'format': 'h'
+        },
+    }
 
-    def read_file(self,filename):
+    def __init__(self, source, destination) -> None:
+        print("This is the Assembly class to assemble files for a mini-MIPS Virtual Machine.\n")
+        self.read_file(source)
+        self.assembling_file(destination)
+
+    def read_file(self, filename):
         """
-        Lit le fichier et renvoit les lignes du fichier    
-    Lit le fichier et renvoit les lignes du fichier    
-        Lit le fichier et renvoit les lignes du fichier    
+        Lit le fichier et stocke les lignes du fichier
         """
         file = open(filename, 'r')
         self.the_lines = file.readlines()
@@ -40,129 +121,54 @@ class Assembly():
             if (self.check_instruction(line)):
                 # convert it to a binary code
                 self.binary_instruction_list.append(
-                    Encode(opcode, arg1, arg2, arg3, format))
+                    Encode(self.opcode, self.arg1, self.arg2, self.arg3, self.format).encode())
         # store all assembled instructions into the output binary file
-        self.write_binary_file(self.binary_instruction_list, destination)
+        self.write_binary_file(destination)
 
-    def check_instruction(line):
+    def check_instruction(self, line):
         """
         check which asm instruction is asked in the given line and return the corresponding encoding
         Example: can read instructions like "add r0, r1, r2"
+        :return: Boolean : True if instruction correct and calls the function to store data recognized.
+        False if comment to pass to next line.
         """
         # Définit les cas pour chaque instruction
-        switch = {
-            "comment": {
-                'regex': "\s*#.*$",
-                'opcode': 99,
-                'format': 'r'
-            },
-            'add': {
-                'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
-                'opcode': 2,
-                'format': 'r'
-            },
-            'addi': {
-                'regex': "^\s*(addi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
-                'opcode': 3,
-                'format': 'i'
-            },
-            'sub': {
-                'regex': "^\s*(sub)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
-                'opcode': 4,
-                'format': 'r'
-            },
-            'subi': {
-                'regex': "^\s*(subi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
-                'opcode': 5,
-                'format': 'i'
-            },
-            'mul': {
-                'regex': "^\s*(mul)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
-                'opcode': 6,
-                'format': 'r'
-            },
-            'muli': {
-                'regex': "^\s*(muli)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
-                'opcode': 7,
-                'format': 'i'
-            },
-            'div': {
-                'regex': "^\s*(div)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
-                'opcode': 8,
-                'format': 'r'
-            },
-            'divi': {
-                'regex': "^\s*(divi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
-                'opcode': 9,
-                'format': 'i'
-            },
-            'and': {
-                'regex': "^\s*(and)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
-                'opcode': 10,
-                'format': 'r'
-            },
-            'andi': {
-                'regex': "^\s*(andi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
-                'opcode': 11,
-                'format': 'i'
-            },
-            'or': {
-                'regex': "^\s*(or)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
-                'opcode': 12,
-                'format': 'r'
-            },
-            'ori': {
-                'regex': "^\s*(ori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
-                'opcode': 13,
-                'format': 'i'
-            },
-            'xor': {
-                'regex': "^\s*(xor)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
-                'opcode': 14,
-                'format': 'r'
-            },
-            'xori': {
-                'regex': "^\s*(xori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
-                'opcode': 15,
-                'format': 'i'
-            },
-            'stop': {
-                'regex': "^\s*(stop)",
-                'opcode': 35,
-                'format': 'h'
-            },
-        }
-        for case in switch.items():
+        for case in self.instructionSwitch.items():
             key, value = case
             expression_string = value['regex']
             expression = re.compile(expression_string)
             matching = expression.match(line)
             if matching:
                 print(f"match with: {key} = {value['opcode']}")
-                format = value['format']
+                self.opcode = value['opcode']
+                self.format = value['format']
                 if key == "comment":
                     print("A comment has been recognized.")
                     print(f"This is the recognized line : {line}")
-                    break
-                if format in 'ri':
-                    return value['opcode'], int(matching.group(2)), int(matching.group(3)), int(matching.group(4)), value['format']
-                if format in 'jr ji b':
-                    return value['opcode'], int(matching.group(2)), int(matching.group(3)), 0, value['format']
-                if format in 's':
-                    return value['opcode'], int(matching.group(2)), 0, 0, value['format']
-                if format in 'h':
-                    return value['opcode'], 0, 0, 0, value['format']
-        print("error input file : no matching instruction")
-        return exit(-1)
-        # Mettre une erreur pour le non matching (non ?)
+                    return False
+                self.store_instruction(matching)
+                return True
 
-    def write_binary_file(binary_instruction_list: list, destination: str = "bin/destination.bin"):
+        raise Exception("error input file : no matching instruction")
+
+    def store_instruction(self, matching):
+        if self.format in 'ri':
+            self.arg1 = int(matching.group(2))
+            self.arg2 = int(matching.group(3))
+            self.arg3 = int(matching.group(4))
+        if self.format in 'jr ji b':
+            self.arg1 = int(matching.group(2))
+            self.arg2 = int(matching.group(3))
+        if self.format in 's':
+            self.arg1 = int(matching.group(2))
+
+    def write_binary_file(self, destination: str = "bin/destination.bin"):
         """
         Write the binary file for the given instruction
         """
         out_file = open(destination, "wb")
-        print(binary_instruction_list)
-        for value in binary_instruction_list:
+        print(self.binary_instruction_list)
+        for value in self.binary_instruction_list:
             out_file.write(struct.pack("<L", value))
         out_file.close()
 
@@ -176,16 +182,17 @@ class Encode():
         self.arg3 = arg3
         self.format = format
 
+    def encode(self):
         switch = {
             'r': self.encode_r(),
             'i': self.encode_i(),
-            'jr': self.encode_jr(opcode, arg1, arg2),
-            'ji': self.encode_ji(opcode, arg1, arg2),
-            'b': self.encode_b(opcode, arg1, arg2),
-            's': self.encode_s(opcode, arg1),
-            'h': self.encode_h(opcode)
+            'jr': self.encode_jr(),
+            'ji': self.encode_ji(),
+            'b': self.encode_b(),
+            's': self.encode_s(),
+            'h': self.encode_h()
         }
-        return switch[format]
+        return switch[self.format]
 
     def encode_r(self):
         """
@@ -194,69 +201,69 @@ class Encode():
         if (self.opcode == None or self.arg1 == None or self.arg2 == None or self.arg3 == None):
             raise Exception(
                 "Error input arguments. Please use valid arguments using integer type.\n")
-        self.opcode = self.opcode << 26
+        opcode = self.opcode << 26
         rd = self.arg1 << 21
         rs1 = self.arg2 << 16
         rs2 = self.arg3 << 11
-        binary_instruction = self.opcode | rd | rs1 | rs2
+        binary_instruction = opcode | rd | rs1 | rs2
         return binary_instruction
 
     def encode_i(self):
         """
         Convert the recognized instruction into a binary instruction
         """
-        self.opcode = self.opcode << 26
+        opcode = self.opcode << 26
         rd = self.arg1 << 21
         rs = self.arg2 << 16
         im = self.arg3 & 0x0000ffff
-        binary_instruction = self.opcode | rd | rs | im
+        binary_instruction = opcode | rd | rs | im
         return binary_instruction
 
     def encode_jr(self):
         """
         Convert the recognized instruction into a binary instruction
         """
-        self.opcode = self.opcode << 26
+        opcode = self.opcode << 26
         rd = self.arg1 << 21
         ra = self.arg2 << 16
-        binary_instruction = self.opcode | rd | ra
+        binary_instruction = opcode | rd | ra
         return binary_instruction
 
     def encode_ji(self):
         """
         Convert the recognized instruction into a binary instruction
         """
-        self.opcode = self.opcode << 26
+        opcode = self.opcode << 26
         rd = self.arg1 << 21
         addr = self.arg2 & 0x000fffff
-        binary_instruction = self.opcode | rd | addr
+        binary_instruction = opcode | rd | addr
         return binary_instruction
 
     def encode_b(self):
         """
         Convert the recognized instruction into a binary instruction
         """
-        self.opcode = self.opcode << 26
+        opcode = self.opcode << 26
         rs = self.arg1 << 21
         addr = self.arg2 & 0x000fffff
-        binary_instruction = self.opcode | rs | addr
+        binary_instruction = opcode | rs | addr
         return binary_instruction
 
     def encode_s(self):
         """
         Convert the recognized instruction into a binary instruction
         """
-        self.opcode = self.opcode << 26
+        opcode = self.opcode << 26
         n = self.arg1 & 0x03ffffff
-        binary_instruction = self.opcode | n
+        binary_instruction = opcode | n
         return binary_instruction
 
     def encode_h(self):
         """
         Convert the recognized instruction into a binary instruction
         """
-        self.opcode = self.opcode << 26
-        binary_instruction = self.opcode
+        opcode = self.opcode << 26
+        binary_instruction = opcode
         return binary_instruction
 
 
@@ -280,4 +287,4 @@ if __name__ == "__main__":
     except IndexError:
         print("No output file given. Writing in the default file : bin/destination.bin\n")
         destination = "bin/destination.bin"
-    Assembly.main(source, destination)
+    Assembly(source, destination)
