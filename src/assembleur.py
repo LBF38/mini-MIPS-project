@@ -23,6 +23,11 @@ class Assembly():
             'opcode': 99,
             'format': 'r'
         },
+        "label": {
+            'regex':"^(.*):\s*$",
+            'opcode':99,
+            'format':'r'
+        },
         'add': {
             'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 2,
@@ -144,6 +149,10 @@ class Assembly():
                 self.format = value['format']
                 if key == "comment":
                     print("A comment has been recognized.")
+                    print(f"This is the recognized line : {line}")
+                    return False
+                if key == "label":
+                    print("A label has been recognized.")
                     print(f"This is the recognized line : {line}")
                     return False
                 self.store_instruction(matching)
