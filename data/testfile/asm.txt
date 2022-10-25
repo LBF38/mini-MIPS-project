@@ -1,5 +1,5 @@
 test:
-    addi r3 r4 5 # testing comment at the end of the line
+    add r3 r4 5 # testing comment at the end of the line
 loop_for_end:
     stop # end of the loop
 stop # stop the machine

@@ -24,9 +24,9 @@ class Assembly():
             'format': 'r'
         },
         "label": {
-            'regex':"^(.*):\s*$",
-            'opcode':99,
-            'format':'r'
+            'regex': "^(.*):\s*$",
+            'opcode': 99,
+            'format': 'r'
         },
         'add': {
             'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
@@ -34,7 +34,7 @@ class Assembly():
             'format': 'r'
         },
         'addi': {
-            'regex': "^\s*(addi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 3,
             'format': 'i'
         },
@@ -44,7 +44,7 @@ class Assembly():
             'format': 'r'
         },
         'subi': {
-            'regex': "^\s*(subi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': "^\s*(sub)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 5,
             'format': 'i'
         },
@@ -54,7 +54,7 @@ class Assembly():
             'format': 'r'
         },
         'muli': {
-            'regex': "^\s*(muli)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': "^\s*(mul)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 7,
             'format': 'i'
         },
@@ -64,7 +64,7 @@ class Assembly():
             'format': 'r'
         },
         'divi': {
-            'regex': "^\s*(divi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': "^\s*(div)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 9,
             'format': 'i'
         },
@@ -74,7 +74,7 @@ class Assembly():
             'format': 'r'
         },
         'andi': {
-            'regex': "^\s*(andi)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': "^\s*(and)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 11,
             'format': 'i'
         },
@@ -84,7 +84,7 @@ class Assembly():
             'format': 'r'
         },
         'ori': {
-            'regex': "^\s*(ori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': "^\s*(or)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 13,
             'format': 'i'
         },
@@ -94,9 +94,94 @@ class Assembly():
             'format': 'r'
         },
         'xori': {
-            'regex': "^\s*(xori)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': "^\s*(xor)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
             'opcode': 15,
             'format': 'i'
+        },
+        'shl': {
+            'regex': "^\s*(shl)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 16,
+            'format': 'r'
+        },
+        'shli': {
+            'regex': "^\s*(shl)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 17,
+            'format': 'i'
+        },
+        'shr': {
+            'regex': "^\s*(shr)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 18,
+            'format': 'r'
+        },
+        'shri': {
+            'regex': "^\s*(shr)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 19,
+            'format': 'i'
+        },
+        'slt': {
+            'regex': "^\s*(slt)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 20,
+            'format': 'r'
+        },
+        'slti': {
+            'regex': "^\s*(slt)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 21,
+            'format': 'i'
+        },
+        'sle': {
+            'regex': "^\s*(sle)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 22,
+            'format': 'r'
+        },
+        'slei': {
+            'regex': "^\s*(sle)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 23,
+            'format': 'i'
+        },
+        'seq': {
+            'regex': "^\s*(seq)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'opcode': 24,
+            'format': 'r'
+        },
+        'seqi': {
+            'regex': "^\s*(seq)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 25,
+            'format': 'i'
+        },
+        'load': {
+            'regex': "^\s*(load)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 27,
+            'format': 'i'
+        },
+        'store': {
+            'regex': "^\s*(store)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 29,
+            'format': 'i'
+        },
+        'jmpr': {
+            'regex': "^\s*(jmp)\s+r(\d+)\s+r(\d+)",
+            'opcode': 30,
+            'format': 'jr'
+        },
+        'jmpi': {
+            'regex': "^\s*(jmp)\s+(-?\d+)\s+r(\d+)",
+            'opcode': 31,
+            'format': 'ji'
+        },
+        'braz': {
+            'regex': "^\s*(braz)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 32,
+            'format': 'b'
+        },
+        'branz': {
+            'regex': "^\s*(branz)\s+r(\d+)\s+(-?\d+)",
+            'opcode': 33,
+            'format': 'b'
+        },
+        'scall': {
+            'regex': "^\s*(scall)\s+(-?\d+)",
+            'opcode': 34,
+            'format': 's'
         },
         'stop': {
             'regex': "^\s*(stop)",

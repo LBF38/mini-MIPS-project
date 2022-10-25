@@ -1,0 +1,10 @@
+    add r1 r0 0         # r1 = 0 (r0 est toujours à 0)
+LOOP_START:
+    slt r2 r1 5         # si r1 < 5 alors r2 = 1 sinon r2 = 0
+#    braz r2 LOOP_END    # si r2 == 0 alors saute à LOOP_END
+    add r20 r1 0        # r20 = r1 (r20 = r1 + 0)
+    scall 1             # affiche r20 à l'écran
+    add r1 r1 1         # r1 = r1 + 1
+#    jmp LOOP_START      # saute à LOOP_START
+LOOP_END:
+    stop                # arrêt de la machine
