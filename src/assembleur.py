@@ -195,16 +195,17 @@ class Assembly():
         self.read_file(source)
         self.assembling_file(destination)
 
-    def read_file(self, filename):
+    def read_file(self, source):
         """
         Lit le fichier et stocke les lignes du fichier
         """
-        file = open(filename, 'r')
+        file = open(source, 'r')
         self.the_lines = file.readlines()
         file.close()
 
     def assembling_file(self, destination):
         self.binary_instruction_list = []
+        self.check_labels()
         for line in self.the_lines:
             line.strip()
             # check which instruction is in the line
@@ -266,10 +267,20 @@ class Assembly():
             out_file.write(struct.pack("<L", value))
         out_file.close()
 
+    def check_labels(self):
+        self.labels = {}
+        for i, line in enumerate(self.the_lines):
+            matching = re.compile(
+                self.instructionSwitch['label']['regex']).match(line)
+            if matching:
+                # adresse suivante, après le label.
+                self.labels[matching.group(1)] = i+1
+        print(self.labels)
+
 
 class Encode():
     def __init__(self, opcode, arg1, arg2, arg3, format) -> None:
-        print("This is the encoding class to encode instructions")
+        # print("This is the encoding class to encode instructions")
         self.opcode = opcode
         self.arg1 = arg1
         self.arg2 = arg2
