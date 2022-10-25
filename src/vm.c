@@ -1,7 +1,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vm.h>
+#include <errno.h>
+#include <string.h>
+#include "vm.h"
+// #include <vm.h>
 
 unsigned regs[NUM_REGS];
 unsigned program[] = {0x1064, 0x11C8, 0x2201, 0x0000};
@@ -15,21 +18,40 @@ int fetch()
     return program[pc++];
 }
 
+void read_file(char *filename)
+{
+    char *line = (char *)malloc(8 * sizeof(char));
+
+    FILE *inputFile = fopen(filename, "rb");
+    // Gestion erreur ouverture fichier
+    if (inputFile == NULL)
+    {
+        perror("==vm.c== Error opening file");
+        exit(-1);
+    }
+    fread(line, 1, 8, inputFile);
+    printf("This is the read_file function. We read a binary file.\n");
+    unsigned test;
+    test = atoi(line);
+    printf("%08x\n", test);
+    free(line);
+}
+
 /* instruction fields */
-int instrNum = 0;
+int opcode = 0;
 int reg1 = 0;
 int reg2 = 0;
 int reg3 = 0;
 int imm = 0;
 
 /* decode a word */
-void decode(int instr)
+void decode(int instruction)
 {
-    instrNum = (instr & 0xF000) >> 12;
-    reg1 = (instr & 0xF00) >> 8;
-    reg2 = (instr & 0xF0) >> 4;
-    reg3 = (instr & 0xF);
-    imm = (instr & 0xFF);
+    opcode = (instruction & 0xF000) >> 12;
+    reg1 = (instruction & 0xF00) >> 8;
+    reg2 = (instruction & 0xF0) >> 4;
+    reg3 = (instruction & 0xF);
+    imm = (instruction & 0xFF);
 }
 
 /* the VM runs until this flag becomes 0 */
@@ -38,7 +60,7 @@ int running = 1;
 /* evaluate the last decoded instruction */
 void eval()
 {
-    switch (instrNum)
+    switch (opcode)
     {
     case HALT:
         printf("halt\n");
@@ -99,8 +121,8 @@ void run()
     while (running)
     {
         showRegs();
-        int instr = fetch();
-        decode(instr);
+        int instruction = fetch();
+        decode(instruction);
         eval();
     }
     showRegs();
@@ -108,12 +130,13 @@ void run()
 
 int main(int argc, const char *argv[])
 {
-    run();
-    int i;
-    for (i = 0; i < argc; i++)
-    {
-        printf("argv[%d] = \"%s\" \n", i, argv[i]);
-    }
+    // run();
+    // int i;
+    // for (i = 0; i < argc; i++)
+    // {
+    //     printf("argv[%d] = \"%s\" \n", i, argv[i]);
+    // }
+    read_file("bin/destination.bin");
 
     return EXIT_SUCCESS;
 }
