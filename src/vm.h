@@ -1,15 +1,7 @@
 // Header de la VM (ISS)
 
-#define NUM_REGS 4
-#define HALT 0
-#define LOADI 1
-#define ADD 2
-#define SUB 3
-#define MULT 4
-#define DIV 5
-#define AND 6
-#define OR 7
-#define XOR 8
+#define MEMORY_SIZE 2048
+#define NUM_REGS 32
 
 #define OPCODE_ADD 2
 #define OPCODE_ADDI 3
