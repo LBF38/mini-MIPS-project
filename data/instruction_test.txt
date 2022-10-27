@@ -1,1 +1,49 @@
 # File for testing every instructions one by one.
+#
+# Opérations arithmétiques et logiques
+add r1 r0 1         # r1 = 1. check instruction addi (3)
+add r2 r0 5         # r2 = 5
+add r3 r1 r2        # r3 = r1 + r2 = 6 check instruction add (2)
+#sub r1 r0 -2        # r1 = r1 - 2 = -1 check instruction sub (5)
+#sub r5 r1 r2        # r5 = r1 - r2 = -6 check instruction sub (4) // Bon pour les nbs négatifs ?
+mul r1 r1 r2       	# rd <= rs1 * rs2	            (6)
+mul r2 r2 3     	# rd <= rs1 * im	            (7)
+div r2 r2 3     	# rd <= rs1 / im	            (9)
+div r1 r1 r2       	# rd <= rs1 / rs2	            (8)
+#and rd rs1 rs2      # rd <= rs1 & rs2	            (10)
+#and rd rs im        # rd <= rs1 & im	            (11)
+#or rd rs1 rs2       # rd <= rs1 | rs2	            (12)
+#or rd rs im		    # rd <= rs1 | im	            (13)
+#xor rd rs1 rs2	 	# rd <= rs1 ^ rs2	            (14)
+#xor rd rs im	 	# rd <= rs1 ^ im	            (15)
+#shl rd rs1 rs2		# rd <= rs1 << rs2	            (16)
+#shl rd rs im		# rd <= rs1 << im	            (17)
+#shr rd rs1 rs2		# rd <= rs1 >> rs2	            (18)
+#shr rd rs im        # rd <= rs1 >> im               (19)
+#
+# Opérations de comparaison
+#slt rd, rs1, rs2	# rd <= (rs1 < rs2) ? 1 : 0	    (20)
+#slt rd, rs, im		# rd <= (rs1 < im) ? 1 : 0	    (21)
+#sle rd, rs1, rs2	# rd <= (rs1 <= rs2) ? 1 : 0	(22)
+#sle rd, rs, im		# rd <= (rs1 <= im) ? 1 : 0	    (23)
+#seq rd, rs1, rs2	# rd <= (rs1 = rs2) ? 1 : 0	    (24)
+#seq rd, rs, im		# rd <= (rs1 = im) ? 1 : 0      (25)
+#
+# Load et Store
+#load rd, ra, offset		# rd <= mem[ra + offset]    (27)
+#store rs, ra, offset	# mem[ra + offset] <= rs    (29)
+#
+# Branchements
+#jmp ra, rd		    # rd <= PC ; PC <= ra           (30)
+#jmp addr, rd		# rd <= PC ; PC <= addr         (31)
+#braz rs, addr		# if (rs = 0) {PC <= addr}      (32)
+#branz rs, addr  	# if (rs != 0) {PC <= addr}     (33)
+#
+# Appels Système
+#scall 0             # r20 <= number from keyboard   (34)
+#scall 1             # print r20 on screen           (34)
+#scall 3             # print r20 as a 7-bit char     (34)
+#scall 4             # write string pointed to by r20(34)
+#
+# Arrêt machine
+stop                # arrêt machine                 (35)

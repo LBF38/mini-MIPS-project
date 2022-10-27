@@ -8,7 +8,7 @@ Création d'un assembleur en python pour convertir des instructions rédigées e
 
 ## Liste des instructions disponibles
 
-Lien vers le fichier qui contient l'ensemble des instructions disponibles dans la VM et reconnu par l'Assembleur : 
+Lien vers le fichier qui contient l'ensemble des instructions disponibles dans la VM et reconnu par l'Assembleur :
 [Instructions](instructions.md)
 
 ## Ressources
