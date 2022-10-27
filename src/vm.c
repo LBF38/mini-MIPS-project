@@ -4,10 +4,12 @@
 #include <errno.h>
 #include <string.h>
 #include "vm.h"
-// #include <vm.h>
+
+#define PROGRAMLEN 10 // MAX number of instructions
+unsigned program[PROGRAMLEN];
 
 unsigned regs[NUM_REGS];
-unsigned program[] = {0x1064, 0x11C8, 0x2201, 0x0000};
+// unsigned program[] = {0x1064, 0x11C8, 0x2201, 0x0000};
 
 /* program counter */
 int pc = 0;
@@ -20,8 +22,6 @@ int fetch()
 
 void read_file(char *filename)
 {
-    char *line = (char *)malloc(8 * sizeof(char));
-
     FILE *inputFile = fopen(filename, "rb");
     // Gestion erreur ouverture fichier
     if (inputFile == NULL)
@@ -29,12 +29,16 @@ void read_file(char *filename)
         perror("==vm.c== Error opening file");
         exit(-1);
     }
-    fread(line, 1, 8, inputFile);
+    int i = 0;
+    while (fread(&program[i], 1, 32, inputFile))
+    {
+        for (int j = 0; j < PROGRAMLEN; j++)
+        {
+            printf("%08X\n", program[j]);
+        }
+        i++;
+    }
     printf("This is the read_file function. We read a binary file.\n");
-    unsigned test;
-    test = atoi(line);
-    printf("%08x\n", test);
-    free(line);
 }
 
 /* instruction fields */
@@ -136,7 +140,9 @@ int main(int argc, const char *argv[])
     // {
     //     printf("argv[%d] = \"%s\" \n", i, argv[i]);
     // }
-    read_file("bin/destination.bin");
+    // read_file("bin/destination.bin");
+    char *filename = "bin/file.bin";
+    read_file(filename);
 
     return EXIT_SUCCESS;
 }
