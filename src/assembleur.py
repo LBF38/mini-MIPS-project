@@ -19,7 +19,7 @@ import sys
 class Assembly():
     instructionSwitch = {
         "comment": {
-            'regex': r"\s*#.*$",
+            'regex': r"^\s*#.*$",
             'opcode': 99,
             'format': 'r'
         },
@@ -211,6 +211,11 @@ class Assembly():
         # self.check_labels()
         for line in self.the_lines:
             line.strip()
+            # check comments
+            matching = re.compile(
+                self.instructionSwitch['comment']['regex']).match(line)
+            if matching:
+                continue
             # check labels
             matching = re.compile(
                 self.instructionSwitch['label']['regex']).match(line)

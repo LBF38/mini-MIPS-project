@@ -1,5 +1,10 @@
+    add r4 r0 5 # initialisation à 5
+    add r1 r0 0 # initialisation à 0
 test:
-    add r3 r4 5 # testing comment at the end of the line
-    sub r4 r0 1
+    seq r1 r4 0 # si r4==0 alors r1=1 sinon r1=0
+    branz r1 loop_for_end # si r1!=0 alors goto loop_for_end
+    add r3 r3 1 # testing comment at the end of the line
+    sub r4 r4 1
+    jmp r0 test
 loop_for_end:
     stop # end of the loop

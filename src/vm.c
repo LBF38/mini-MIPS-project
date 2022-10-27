@@ -9,7 +9,7 @@ u_int32_t memory[MEMORY_SIZE];
 unsigned registers[NUM_REGS];
 
 /* program counter */
-int pc = 0;
+int program_counter = 0;
 /* instruction fields */
 int instruction;
 int opcode = 0;
@@ -40,7 +40,7 @@ void print_memory()
 }
 
 /* display all registers as 4-digit hexadecimal words */
-void showRegs()
+void show_registers()
 {
     int i;
     printf("registers = ");
@@ -69,11 +69,12 @@ void read_file(char *filename)
         exit(-1);
     }
     int i = 0;
-    while (fread(&memory[i], 1, 32, inputFile))
+    while (fread(&memory[i], 4, 1, inputFile))
     {
         // print_memory();
         i++;
     }
+    // printf("i = %d\n",i);
 }
 
 void decode_r()
@@ -291,15 +292,15 @@ void op_jmpr()
 {
     decode_jr();
     printf("jmp r%d r%d\n", rd, ra);
-    write_registers(rd, pc);
-    pc = ra;
+    write_registers(rd, program_counter);
+    program_counter = ra - 1; // pour être à ra au prochain tour. (program_counter++ à la fin de op_jmpr dans run())
 }
 void op_jmpi()
 {
     decode_ji();
     printf("jmp r%d %d\n", rd, addr);
-    write_registers(rd, pc);
-    pc = addr;
+    write_registers(rd, program_counter);
+    program_counter = addr - 1;
 }
 void op_braz()
 {
@@ -307,7 +308,7 @@ void op_braz()
     printf("braz r%d %d\n", rs, addr);
     if (rs == 0)
     {
-        pc = addr;
+        program_counter = addr - 1;
     }
 }
 void op_branz()
@@ -316,15 +317,16 @@ void op_branz()
     printf("branz r%d %d\n", rs, addr);
     if (rs != 0)
     {
-        pc = addr;
+        program_counter = addr - 1;
     }
 }
 void op_scall()
 {
+    // vérifier toutes les fonctionnalités de cette fonction.
     decode_s();
     printf("scall %d\n", n);
     int userInput;
-    int r20;
+    // int r20;
     switch (n)
     {
     case 0:
@@ -337,10 +339,10 @@ void op_scall()
     case 3:
         printf("%c\n", registers[20]);
         break;
-    case 4:
-        char *r20 = registers[20];
-        printf("%s\n", r20);
-        break;
+    // case 4:
+    //     // char *r20 = registers[20];
+    //     printf("%s\n", registers[20]);
+    //     break;
     default:
         break;
     }
@@ -464,13 +466,14 @@ void run()
 {
     while (running)
     {
-        // showRegs();
-        instruction = memory[pc];
+        show_registers();
+        instruction = memory[program_counter];
         opcode = (instruction >> 26) & 0x3f;
         eval();
-        pc++;
+        program_counter++;
     }
-    // showRegs();
+    printf("END of program\n");
+    show_registers();
 }
 
 int main(int argc, const char *argv[])
@@ -483,7 +486,10 @@ int main(int argc, const char *argv[])
     // read_file("bin/destination.bin");
     if (argc >= 2)
     {
-        read_file(argv[1]);
+        char *filename = (char *)malloc(100 * sizeof(char));
+        strcpy(filename, argv[1]);
+        read_file(filename);
+        free(filename);
         run();
     }
     else
