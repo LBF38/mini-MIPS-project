@@ -1,0 +1,1 @@
+# File for testing every instructions one by one.

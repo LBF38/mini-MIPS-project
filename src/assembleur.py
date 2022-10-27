@@ -261,12 +261,12 @@ class Assembly():
                 self.opcode = value['opcode']
                 self.format = value['format']
                 if key == "comment":
-                    print("A comment has been recognized.")
-                    print(f"This is the recognized line : {line}")
+                    # print("A comment has been recognized.")
+                    # print(f"This is the recognized line : {line}")
                     return None
                 if key == "label":
-                    print("A label has been recognized.")
-                    print(f"This is the recognized line : {line}")
+                    # print("A label has been recognized.")
+                    # print(f"This is the recognized line : {line}")
                     return None
                 return matching
         raise Exception(
@@ -298,7 +298,7 @@ class Assembly():
             try:
                 self.arg2 = int(matching.group(3))
             except ValueError as error:
-                self.arg2=0
+                self.arg2 = 0
                 print(
                     f"solved error {error} with label : {matching.group(3)}. Set argument at 0. Returned the label")
                 return matching.group(3)
@@ -440,5 +440,6 @@ if __name__ == "__main__":
     except IndexError:
         matching = re.compile(r"^.*/(\w+).(\w+\b)").match(sys.argv[1])
         destination = f"bin/{matching.group(1)}.bin"
-        print(f"No output file given. Writing in the corresponding file : {destination}\n")
+        print(
+            f"No output file given. Writing in the corresponding file : {destination}\n")
     Assembly(source, destination)
