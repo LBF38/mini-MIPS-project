@@ -39,6 +39,25 @@ void print_memory()
     printf("END Memory\n");
 }
 
+/* display all registers as 4-digit hexadecimal words */
+void showRegs()
+{
+    int i;
+    printf("registers = ");
+    for (i = 0; i < NUM_REGS; i++)
+        printf("%04X ", registers[i]);
+    printf("\n");
+}
+
+void write_registers(int index, int value)
+{
+    if (index == 0)
+    {
+        value = 0;
+    }
+    registers[index] = value;
+}
+
 void read_file(char *filename)
 {
     printf("This is the read_file function. We read a binary file.\n");
@@ -93,171 +112,238 @@ void op_add()
 {
     decode_r();
     printf("add r%d r%d r%d\n", rd, rs1, rs2);
+    write_registers(rd, registers[rs1] + registers[rs2]);
 }
 
 void op_addi()
 {
     decode_i();
     printf("add r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] + immediate);
 }
 
 void op_sub()
 {
     decode_r();
     printf("sub r%d r%d r%d\n", rd, rs1, rs2);
-    // registers[reg1] = registers[reg2] - registers[reg3];
+    write_registers(rd, registers[rs1] - registers[rs2]);
 }
 void op_subi()
 {
     decode_i();
     printf("sub r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] - immediate);
 }
 void op_mul()
 {
     decode_r();
     printf("mul r%d r%d r%d\n", rd, rs1, rs2);
-    // registers[reg1] = registers[reg2] * registers[reg3];
+    write_registers(rd, registers[rs1] * registers[rs2]);
 }
 void op_muli()
 {
     decode_i();
     printf("mul r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] * immediate);
 }
 void op_div()
 {
     decode_r();
     printf("div r%d r%d r%d\n", rd, rs1, rs2);
-    // if (registers[reg3] == 0)
-    // {
-    //     fprintf(stderr, "error input: division by zero\n");
-    //     exit(-1);
-    // }
-    // registers[reg1] = registers[reg2] / registers[reg3];
+    if (registers[rs2] == 0)
+    {
+        fprintf(stderr, "error input: division by zero\n");
+        exit(-1);
+    }
+    write_registers(rd, registers[rs1] / registers[rs2]);
 }
 void op_divi()
 {
     decode_i();
     printf("div r%d r%d %d\n", rd, rs, immediate);
+    if (immediate == 0)
+    {
+        fprintf(stderr, "error input: division by zero\n");
+        exit(-1);
+    }
+    write_registers(rd, registers[rs] / immediate);
 }
 void op_and()
 {
     decode_r();
     printf("and r%d r%d r%d\n", rd, rs1, rs2);
-    // registers[reg1] = registers[reg2] && registers[reg3];
+    write_registers(rd, registers[rs1] && registers[rs2]);
 }
 void op_andi()
 {
     decode_i();
     printf("and r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] && immediate);
 }
 void op_or()
 {
     decode_r();
     printf("or r%d r%d r%d\n", rd, rs1, rs2);
-    // registers[reg1] = registers[reg2] || registers[reg3];
+    write_registers(rd, registers[rs1] || registers[rs2]);
 }
 void op_ori()
 {
     decode_i();
     printf("or r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] || immediate);
 }
 void op_xor()
 {
     decode_r();
     printf("xor r%d r%d r%d\n", rd, rs1, rs2);
-    // registers[reg1] = registers[reg2] ^ registers[reg3];
+    write_registers(rd, registers[rs1] ^ registers[rs2]);
 }
 void op_xori()
 {
     decode_i();
     printf("xor r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] ^ immediate);
 }
 void op_shl()
 {
     decode_r();
     printf("shl r%d r%d r%d\n", rd, rs1, rs2);
+    write_registers(rd, registers[rs1] << registers[rs2]);
 }
 void op_shli()
 {
     decode_i();
     printf("shl r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] << immediate);
 }
 void op_shr()
 {
     decode_r();
     printf("shr r%d r%d r%d\n", rd, rs1, rs2);
+    write_registers(rd, registers[rs1] >> registers[rs2]);
 }
 void op_shri()
 {
     decode_i();
     printf("shr r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] >> immediate);
 }
 void op_slt()
 {
     decode_r();
     printf("slt r%d r%d r%d\n", rd, rs1, rs2);
+    write_registers(rd, registers[rs1] < registers[rs2]);
 }
 void op_slti()
 {
     decode_i();
     printf("slt r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] < immediate);
 }
 void op_sle()
 {
     decode_r();
     printf("sle r%d r%d r%d\n", rd, rs1, rs2);
+    write_registers(rd, registers[rs1] <= registers[rs2]);
 }
 void op_slei()
 {
     decode_i();
     printf("sle r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] <= immediate);
 }
 void op_seq()
 {
     decode_r();
     printf("seq r%d r%d r%d\n", rd, rs1, rs2);
+    write_registers(rd, registers[rs1] == registers[rs2]);
 }
 void op_seqi()
 {
     decode_i();
     printf("seq r%d r%d %d\n", rd, rs, immediate);
+    write_registers(rd, registers[rs] == immediate);
 }
 void op_load()
 {
     // A vérifier
     decode_i();
     printf("load r%d r%d %d\n", rd, rs, immediate);
-    // registers[reg1] = imm;
+    if (rs + immediate >= MEMORY_SIZE)
+    {
+        perror("Error load operator: indexError. Can't access in memory.\n");
+        exit(-1);
+    }
+    write_registers(rd, memory[rs + immediate]);
 }
 void op_store()
 {
     decode_i();
     printf("store r%d r%d %d\n", rd, rs, immediate);
+    if (rs + immediate >= MEMORY_SIZE)
+    {
+        perror("Error store operator: indexError. Can't access in memory.\n");
+        exit(-1);
+    }
+    memory[rs + immediate] = rd;
 }
 void op_jmpr()
 {
     decode_jr();
     printf("jmp r%d r%d\n", rd, ra);
+    write_registers(rd, pc);
+    pc = ra;
 }
 void op_jmpi()
 {
     decode_ji();
     printf("jmp r%d %d\n", rd, addr);
+    write_registers(rd, pc);
+    pc = addr;
 }
 void op_braz()
 {
     decode_b();
     printf("braz r%d %d\n", rs, addr);
+    if (rs == 0)
+    {
+        pc = addr;
+    }
 }
 void op_branz()
 {
     decode_b();
     printf("branz r%d %d\n", rs, addr);
+    if (rs != 0)
+    {
+        pc = addr;
+    }
 }
 void op_scall()
 {
     decode_s();
     printf("scall %d\n", n);
+    int userInput;
+    int r20;
+    switch (n)
+    {
+    case 0:
+        scanf("Input a number: %d\n", &userInput);
+        write_registers(registers[20], userInput);
+        break;
+    case 1:
+        printf("%d\n", registers[20]);
+        break;
+    case 3:
+        printf("%c\n", registers[20]);
+        break;
+    case 4:
+        char *r20 = registers[20];
+        printf("%s\n", r20);
+        break;
+    default:
+        break;
+    }
 }
 void op_stop()
 {
@@ -374,25 +460,6 @@ void eval()
     }
 }
 
-/* display all registers as 4-digit hexadecimal words */
-void showRegs()
-{
-    int i;
-    printf("registers = ");
-    for (i = 0; i < NUM_REGS; i++)
-        printf("%04X ", registers[i]);
-    printf("\n");
-}
-
-void write_registers(int index, int value)
-{
-    if (index == 0)
-    {
-        value = 0;
-    }
-    registers[index] = value;
-}
-
 void run()
 {
     while (running)
@@ -414,9 +481,19 @@ int main(int argc, const char *argv[])
     //     printf("argv[%d] = \"%s\" \n", i, argv[i]);
     // }
     // read_file("bin/destination.bin");
-    char *filename = "bin/file.bin";
-    read_file(filename);
-    run();
+    if (argc >= 2)
+    {
+        read_file(argv[1]);
+        run();
+    }
+    else
+    {
+        int i;
+        for (i = 0; i < argc; i++)
+        {
+            printf("argv[%d] = \"%s\" \n", i, argv[i]);
+        }
+    }
 
     return EXIT_SUCCESS;
 }
