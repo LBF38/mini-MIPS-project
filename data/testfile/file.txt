@@ -5,6 +5,6 @@ LOOP_START:
     add r20 r1 0        # r20 = r1 (r20 = r1 + 0)
     scall 1             # affiche r20 à l'écran
     add r1 r1 1         # r1 = r1 + 1
-    jmp LOOP_START      # saute à LOOP_START
+    jmp r0 LOOP_START   # saute à LOOP_START
 LOOP_END:
     stop                # arrêt de la machine

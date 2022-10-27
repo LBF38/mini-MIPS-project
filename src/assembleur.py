@@ -19,176 +19,179 @@ import sys
 class Assembly():
     instructionSwitch = {
         "comment": {
-            'regex': "\s*#.*$",
+            'regex': r"\s*#.*$",
             'opcode': 99,
             'format': 'r'
         },
         "label": {
-            'regex': "^(.*):\s*$",
+            'regex': r"^(.*):\s*$",
             'opcode': 99,
             'format': 'r'
         },
         'add': {
-            'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 2,
             'format': 'r'
         },
         'addi': {
-            'regex': "^\s*(add)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(add)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 3,
             'format': 'i'
         },
         'sub': {
-            'regex': "^\s*(sub)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(sub)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 4,
             'format': 'r'
         },
         'subi': {
-            'regex': "^\s*(sub)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(sub)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 5,
             'format': 'i'
         },
         'mul': {
-            'regex': "^\s*(mul)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(mul)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 6,
             'format': 'r'
         },
         'muli': {
-            'regex': "^\s*(mul)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(mul)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 7,
             'format': 'i'
         },
         'div': {
-            'regex': "^\s*(div)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(div)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 8,
             'format': 'r'
         },
         'divi': {
-            'regex': "^\s*(div)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(div)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 9,
             'format': 'i'
         },
         'and': {
-            'regex': "^\s*(and)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(and)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 10,
             'format': 'r'
         },
         'andi': {
-            'regex': "^\s*(and)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(and)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 11,
             'format': 'i'
         },
         'or': {
-            'regex': "^\s*(or)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(or)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 12,
             'format': 'r'
         },
         'ori': {
-            'regex': "^\s*(or)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(or)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 13,
             'format': 'i'
         },
         'xor': {
-            'regex': "^\s*(xor)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(xor)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 14,
             'format': 'r'
         },
         'xori': {
-            'regex': "^\s*(xor)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(xor)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 15,
             'format': 'i'
         },
         'shl': {
-            'regex': "^\s*(shl)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(shl)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 16,
             'format': 'r'
         },
         'shli': {
-            'regex': "^\s*(shl)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(shl)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 17,
             'format': 'i'
         },
         'shr': {
-            'regex': "^\s*(shr)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(shr)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 18,
             'format': 'r'
         },
         'shri': {
-            'regex': "^\s*(shr)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(shr)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 19,
             'format': 'i'
         },
         'slt': {
-            'regex': "^\s*(slt)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(slt)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 20,
             'format': 'r'
         },
         'slti': {
-            'regex': "^\s*(slt)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(slt)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 21,
             'format': 'i'
         },
         'sle': {
-            'regex': "^\s*(sle)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(sle)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 22,
             'format': 'r'
         },
         'slei': {
-            'regex': "^\s*(sle)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(sle)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 23,
             'format': 'i'
         },
         'seq': {
-            'regex': "^\s*(seq)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(seq)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 24,
             'format': 'r'
         },
         'seqi': {
-            'regex': "^\s*(seq)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(seq)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 25,
             'format': 'i'
         },
         'load': {
-            'regex': "^\s*(load)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(load)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 27,
             'format': 'i'
         },
         'store': {
-            'regex': "^\s*(store)\s+r(\d+)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(store)\s+r(\d+)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 29,
             'format': 'i'
         },
         'jmpr': {
-            'regex': "^\s*(jmp)\s+r(\d+)\s+r(\d+)",
+            'regex': r"^\s*(jmp)\s+r(\d+)\s+r(\d+)",
             'opcode': 30,
             'format': 'jr'
         },
         'jmpi': {
-            'regex': "^\s*(jmp)\s+(-?\d+)\s+r(\d+)",
+            'regex': r"^\s*(jmp)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 31,
             'format': 'ji'
         },
         'braz': {
-            'regex': "^\s*(braz)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(braz)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 32,
             'format': 'b'
         },
         'branz': {
-            'regex': "^\s*(branz)\s+r(\d+)\s+(-?\d+)",
+            'regex': r"^\s*(branz)\s+r(\d+)\s+(-?\d+|\w+\b)",
             'opcode': 33,
             'format': 'b'
         },
         'scall': {
-            'regex': "^\s*(scall)\s+(-?\d+)",
+            'regex': r"^\s*(scall)\s+(-?\d+)",
             'opcode': 34,
             'format': 's'
         },
         'stop': {
-            'regex': "^\s*(stop)",
+            'regex': r"^\s*(stop)",
             'opcode': 35,
             'format': 'h'
         },
     }
+    address = 0
+    labels = {}
+    labels_used = {}
 
     def __init__(self, source, destination) -> None:
         print("This is the Assembly class to assemble files for a mini-MIPS Virtual Machine.\n")
@@ -205,14 +208,33 @@ class Assembly():
 
     def assembling_file(self, destination):
         self.binary_instruction_list = []
-        self.check_labels()
+        # self.check_labels()
         for line in self.the_lines:
             line.strip()
+            # check labels
+            matching = re.compile(
+                self.instructionSwitch['label']['regex']).match(line)
+            if matching:
+                self.labels[matching.group(1)] = self.address
             # check which instruction is in the line
-            if (self.check_instruction(line)):
+            matching = self.check_instruction(line)
+            if matching:
+                label = self.store_instruction(matching)
                 # convert it to a binary code
-                self.binary_instruction_list.append(
-                    Encode(self.opcode, self.arg1, self.arg2, self.arg3, self.format).encode())
+                if (not label):
+                    encodedInstruction = Encode(
+                        self.opcode, self.arg1, self.arg2, self.arg3, self.format).encode()
+                else:
+                    encodedInstruction = Encode(
+                        self.opcode, self.arg1, self.arg2, self.arg3, self.format).encode()
+                    self.labels_used[self.address] = label
+                self.binary_instruction_list.append(encodedInstruction)
+                self.address += 1
+        for key, value in self.labels_used.items():
+            address = key
+            label = value
+            self.binary_instruction_list[address] = self.binary_instruction_list[address] | self.labels[label]
+        print(f"dict labels : {self.labels}")
         # store all assembled instructions into the output binary file
         self.write_binary_file(destination)
 
@@ -236,24 +258,45 @@ class Assembly():
                 if key == "comment":
                     print("A comment has been recognized.")
                     print(f"This is the recognized line : {line}")
-                    return False
+                    return None
                 if key == "label":
                     print("A label has been recognized.")
                     print(f"This is the recognized line : {line}")
-                    return False
-                self.store_instruction(matching)
-                return True
-
-        raise Exception("error input file : no matching instruction")
+                    return None
+                return matching
+        raise Exception(
+            f"error reading instruction : no matching instruction with line : {line}")
 
     def store_instruction(self, matching):
-        if self.format in 'ri':
+        if self.format in 'r':
             self.arg1 = int(matching.group(2))
             self.arg2 = int(matching.group(3))
             self.arg3 = int(matching.group(4))
+        if self.format in 'i':
+            self.arg1 = int(matching.group(2))
+            try:
+                self.arg2 = int(matching.group(3))
+            except ValueError as error:
+                self.arg2 = 0
+                print(
+                    f"solved error {error} with label : {matching.group(3)}. Set argument at 0. Returned the label")
+                return matching.group(3)
+            try:
+                self.arg3 = int(matching.group(4))
+            except ValueError as error:
+                self.arg3 = 0
+                print(
+                    f"solved error {error} with label : {matching.group(4)}. Set argument at 0. Returned the label")
+                return matching.group(4)
         if self.format in 'jr ji b':
             self.arg1 = int(matching.group(2))
-            self.arg2 = int(matching.group(3))
+            try:
+                self.arg2 = int(matching.group(3))
+            except ValueError as error:
+                self.arg2=0
+                print(
+                    f"solved error {error} with label : {matching.group(3)}. Set argument at 0. Returned the label")
+                return matching.group(3)
         if self.format in 's':
             self.arg1 = int(matching.group(2))
 
