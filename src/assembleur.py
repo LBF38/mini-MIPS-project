@@ -433,6 +433,7 @@ if __name__ == "__main__":
     try:
         destination = sys.argv[2]
     except IndexError:
-        print("No output file given. Writing in the default file : bin/destination.bin\n")
-        destination = "bin/destination.bin"
+        matching = re.compile(r"^.*/(\w+).(\w+\b)").match(sys.argv[1])
+        destination = f"bin/{matching.group(1)}.bin"
+        print(f"No output file given. Writing in the corresponding file : {destination}\n")
     Assembly(source, destination)
