@@ -16,3 +16,6 @@ Lien vers le fichier qui contient l'ensemble des instructions disponibles dans l
 Lien vers l'article "VM in C" : [Register VM in C](https://en.wikibooks.org/wiki/Creating_a_Virtual_Machine/Register_VM_in_C)
 
 Lien vers une autre source "LC-3 VM": [LC-3 VM](https://www.jmeiners.com/lc3-vm/index.html)
+
+Table ASCII : \
+![Table ASCII](https://www.asciitable.com/asciifull.gif)

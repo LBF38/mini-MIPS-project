@@ -1,15 +1,16 @@
 # File for testing every instructions one by one.
 #
 # Opérations arithmétiques et logiques
-add r1 r0 1         # r1 = 1. check instruction addi (3)
-add r2 r0 5         # r2 = 5
-add r3 r1 r2        # r3 = r1 + r2 = 6 check instruction add (2)
+#add r1 r0 1         # r1 = 1. check instruction addi (3)
+#add r2 r0 5         # r2 = 5 check instruction.
+#add r3 r1 r2        # r3 = r1 + r2 = 6 check instruction add (2)
 #sub r1 r0 -2        # r1 = r1 - 2 = -1 check instruction sub (5)
 #sub r5 r1 r2        # r5 = r1 - r2 = -6 check instruction sub (4) // Bon pour les nbs négatifs ?
-mul r1 r1 r2       	# rd <= rs1 * rs2	            (6)
-mul r2 r2 3     	# rd <= rs1 * im	            (7)
-div r2 r2 3     	# rd <= rs1 / im	            (9)
-div r1 r1 r2       	# rd <= rs1 / rs2	            (8)
+#mul r1 r1 r2       	# rd <= rs1 * rs2	            (6) check instruction.
+#mul r2 r2 3     	# rd <= rs1 * im	            (7) check instruction.
+#div r2 r2 3     	# rd <= rs1 / im	            (9) check instruction.
+#div r1 r1 r2       	# rd <= rs1 / rs2	            (8) check instruction.
+// TODO
 #and rd rs1 rs2      # rd <= rs1 & rs2	            (10)
 #and rd rs im        # rd <= rs1 & im	            (11)
 #or rd rs1 rs2       # rd <= rs1 | rs2	            (12)
@@ -22,12 +23,20 @@ div r1 r1 r2       	# rd <= rs1 / rs2	            (8)
 #shr rd rs im        # rd <= rs1 >> im               (19)
 #
 # Opérations de comparaison
-#slt rd, rs1, rs2	# rd <= (rs1 < rs2) ? 1 : 0	    (20)
-#slt rd, rs, im		# rd <= (rs1 < im) ? 1 : 0	    (21)
-#sle rd, rs1, rs2	# rd <= (rs1 <= rs2) ? 1 : 0	(22)
-#sle rd, rs, im		# rd <= (rs1 <= im) ? 1 : 0	    (23)
-#seq rd, rs1, rs2	# rd <= (rs1 = rs2) ? 1 : 0	    (24)
-#seq rd, rs, im		# rd <= (rs1 = im) ? 1 : 0      (25)
+#add r1 r0 1
+#add r2 r0 2
+#slt r3 r1 r2	# rd <= (rs1 < rs2) ? 1 : 0	    (20) check instruction.
+#add r1 r0 3
+#slt r3 r1 5		# rd <= (rs1 < im) ? 1 : 0	    (21) check instruction.
+#add r1 r0 2
+#add r2 r0 r1
+#sle r3 r1 r2	# rd <= (rs1 <= rs2) ? 1 : 0	(22) check instruction.
+#add r3 r0 5
+#sle r3 r1 2		# rd <= (rs1 <= im) ? 1 : 0	    (23) check instruction.
+#add r3 r0 5
+#seq r3 r1 r2	# rd <= (rs1 = rs2) ? 1 : 0	    (24) check instruction.
+#add r3 r0 5
+#seq r3 r1 2		# rd <= (rs1 = im) ? 1 : 0      (25) check instruction.
 #
 # Load et Store
 #load rd, ra, offset		# rd <= mem[ra + offset]    (27)
@@ -40,10 +49,12 @@ div r1 r1 r2       	# rd <= rs1 / rs2	            (8)
 #branz rs, addr  	# if (rs != 0) {PC <= addr}     (33)
 #
 # Appels Système
-#scall 0             # r20 <= number from keyboard   (34)
-#scall 1             # print r20 on screen           (34)
-#scall 3             # print r20 as a 7-bit char     (34)
-#scall 4             # write string pointed to by r20(34)
+#scall 0             # r20 <= number from keyboard   (34) doesn't work.
+#add r20 r0 r2        # r20 = r0 + r1 pour afficher r1
+#scall 1             # print r20 on screen           (34) check instruction.
+#add r20 r20 77      # Affiche un M avec l'instruction suivante. (selon table ASCII) 
+#scall 3             # print r20 as a 7-bit char     (34) check instruction.
+#scall 4             # write string pointed to by r20(34) //to check. Don't know how to correctly implement.
 #
 # Arrêt machine
 stop                # arrêt machine                 (35)
