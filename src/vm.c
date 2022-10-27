@@ -52,7 +52,7 @@ void read_file(char *filename)
     int i = 0;
     while (fread(&memory[i], 1, 32, inputFile))
     {
-        print_memory();
+        // print_memory();
         i++;
     }
 }
@@ -408,7 +408,6 @@ void run()
 
 int main(int argc, const char *argv[])
 {
-    // run();
     // int i;
     // for (i = 0; i < argc; i++)
     // {
