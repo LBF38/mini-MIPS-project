@@ -1,0 +1,12 @@
+or r3 r0 -1
+or r4 r0 1
+or r9 r0 0
+add r5 r3 r4
+add r20 r5 0
+scall 1
+add r3 r4 0
+add r4 r5 0
+add r9 r9 1
+slt r8 r9 17
+branz r8 3
+stop

@@ -1,0 +1,78 @@
+# File for testing every instructions one by one.
+#
+# Opérations arithmétiques et logiques
+#add r1 r0 1         # r1 = 1. checked instruction addi (3)
+#add r2 r0 5         # r2 = 5 checked instruction.
+#add r3 r1 r2        # r3 = r1 + r2 = 6 checked instruction add (2)
+#sub r1 r0 -2        # r1 = r1 - 2 = -1 checked instruction sub (5)
+#sub r5 r1 r2        # r5 = r1 - r2 = -6 checked instruction sub (4) // Bon pour les nbs négatifs ?
+#mul r1 r1 r2       	# rd <= rs1 * rs2	            (6) checked instruction.
+#mul r2 r2 3     	# rd <= rs1 * im	            (7) checked instruction.
+#div r2 r2 3     	# rd <= rs1 / im	            (9) checked instruction.
+#div r1 r1 r2       	# rd <= rs1 / rs2	            (8) checked instruction.
+#add r1 r0 2
+#add r2 r0 -1
+#and r3 r1 r2        # rd <= rs1 & rs2	            (10) checked instruction.
+#and r3 r1 0        # rd <= rs1 & im	            (11) checked instruction.
+#or r3 r1 r2       # rd <= rs1 | rs2	            (12) checked instruction.
+#or r3 r1 0	    # rd <= rs1 | im	            (13) checked instruction.
+#xor r3 r1 r2	 	# rd <= rs1 ^ rs2	            (14) checked instruction.
+#xor r3 r1 0	 	# rd <= rs1 ^ im	            (15) checked instruction.
+#shl r3 r1 r2		# rd <= rs1 << rs2	            (16) checked instruction. Negative numbers not supported yet.
+#shl r3 r1 3		# rd <= rs1 << im	            (17) checked instruction. Negative numbers not supported yet.
+#shr r4 r3 r2		# rd <= rs1 >> rs2	            (18) checked instruction. Negative numbers not supported yet.
+#shr r3 r3 3        # rd <= rs1 >> im               (19) checked instruction. Negative numbers not supported yet.
+#
+# Opérations de comparaison
+#add r1 r0 1
+#add r2 r0 2
+#slt r3 r1 r2	# rd <= (rs1 < rs2) ? 1 : 0	    (20) checked instruction.
+#add r1 r0 3
+#slt r3 r1 5		# rd <= (rs1 < im) ? 1 : 0	    (21) checked instruction.
+#add r1 r0 2
+#add r2 r0 r1
+#sle r3 r1 r2	# rd <= (rs1 <= rs2) ? 1 : 0	(22) checked instruction.
+#add r3 r0 5
+#sle r3 r1 2		# rd <= (rs1 <= im) ? 1 : 0	    (23) checked instruction.
+#add r3 r0 5
+#seq r3 r1 r2	# rd <= (rs1 = rs2) ? 1 : 0	    (24) checked instruction.
+#add r3 r0 5
+#seq r3 r1 2		# rd <= (rs1 = im) ? 1 : 0      (25) checked instruction.
+#
+# Load et Store
+#load r2 r0 10		# rd <= mem[ra + offset]    (27) checked instruction.
+#add r1 r0 9
+#add r20 r1 r0
+#scall 1
+#store r1 r0 10	    # mem[ra + offset] <= rs    (29) checked instruction. Error: Stored the register number and not its value. Resolved.
+#load r2 r0 10      # checked instruction.
+#
+# Branchements
+#jmp ra, rd		    # rd <= PC ; PC <= ra           (30)
+#jmp addr, rd		# rd <= PC ; PC <= addr         (31)
+#braz rs, addr		# if (rs = 0) {PC <= addr}      (32) checked instruction.
+#branz rs, addr  	# if (rs != 0) {PC <= addr}     (33)
+# 
+# Program for testing Branchements:
+# Test braz et jmp:
+    add r1 r0 3
+    add r2 r0 4
+loop_for_start:
+    slt r3 r4 r1               # r3 = (r1 < r4) ? 1 : 0
+    braz r3 loop_for_end       # if (r3==0) goto loop_for_end
+    add r1 r1 1                # r1 += 1
+    branz r3 loop_for_start    # if (r3!=0) goto loop_for_start
+loop_for_end:
+    stop
+#
+# Appels Système
+#add r20 r0 0        # r20 = 0 
+#scall 0             # r20 <= number from keyboard   (34) checked instruction. Misuse of scanf. Resolved.
+#add r20 r0 r2        # r20 = r0 + r1 pour afficher r1
+#scall 1             # print r20 on screen           (34) checked instruction.
+#add r20 r20 77      # Affiche un M avec l'instruction suivante. (selon table ASCII) 
+#scall 3             # print r20 as a 7-bit char     (34) checked instruction.
+#scall 4             # write string pointed to by r20(34) //to checked. Don't know how to correctly implement.
+#
+# Arrêt machine
+#stop                # arrêt machine                 (35) checked instruction.

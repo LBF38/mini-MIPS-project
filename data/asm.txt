@@ -1,0 +1,13 @@
+    add r4 r0 5 # initialisation à 5
+    add r1 r0 -5 # initialisation à 0
+    add r2 r0 25 # init à 25 pour voir un changement.
+    
+test:
+    seq r2 r4 5 # si r4==5 alors r2=1 sinon r2=0
+    slt r3 r1 r4 # r1 < r4
+#    branz r1 loop_for_end # si r1!=0 alors goto loop_for_end
+#    add r3 r3 1 # testing comment at the end of the line
+#    sub r4 r4 1
+#    jmp r0 test
+loop_for_end:
+    stop # end of the loop
