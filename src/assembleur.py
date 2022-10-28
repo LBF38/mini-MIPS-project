@@ -192,6 +192,11 @@ class Assembly():
     address = 0
     labels = {}
     labels_used = {}
+    opcode=0
+    arg1=0
+    arg2=0
+    arg3=0
+    format='r'
 
     def __init__(self, source, destination) -> None:
         print("This is the Assembly class to assemble files for a mini-MIPS Virtual Machine.\n")

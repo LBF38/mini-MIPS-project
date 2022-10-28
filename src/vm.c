@@ -5,7 +5,7 @@
 #include <string.h>
 #include "vm.h"
 
-u_int32_t memory[MEMORY_SIZE];
+unsigned memory[MEMORY_SIZE];
 unsigned registers[NUM_REGS];
 
 /* program counter */
@@ -30,7 +30,7 @@ void print_memory()
     int j = 0;
     while (j < MEMORY_SIZE && memory[j] != 0)
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 10; i++)
         {
             printf("%08X ", memory[j++]);
         }
@@ -286,7 +286,7 @@ void op_store()
         perror("Error store operator: indexError. Can't access in memory.\n");
         exit(-1);
     }
-    memory[rs + immediate] = rd;
+    memory[rs + immediate] = registers[rd]; // valeur du registre à stocker !!
 }
 void op_jmpr()
 {
@@ -330,8 +330,9 @@ void op_scall()
     switch (n)
     {
     case 0:
-        scanf("Input a number: %d\n", &userInput);
-        write_registers(registers[20], userInput);
+        printf("Input a number: ");
+        scanf("%d", &userInput);
+        write_registers(20, userInput);
         break;
     case 1:
         printf("%d\n", registers[20]);
@@ -491,6 +492,8 @@ int main(int argc, const char *argv[])
         read_file(filename);
         free(filename);
         run();
+        // print_memory();
+        // printf("memory[10] = %d\n",memory[10]);
     }
     else
     {
