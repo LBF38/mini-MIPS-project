@@ -1,6 +1,7 @@
     add r4 r0 5 # initialisation à 5
     add r1 r0 -5 # initialisation à 0
     add r2 r0 25 # init à 25 pour voir un changement.
+    
 test:
     seq r2 r4 5 # si r4==5 alors r2=1 sinon r2=0
     slt r3 r1 r4 # r1 < r4

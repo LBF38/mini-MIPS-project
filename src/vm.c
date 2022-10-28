@@ -20,7 +20,7 @@ int rs2 = 0;
 int ra = 0;
 int addr = 0;
 int n = 0;
-int immediate = 0;
+u_int32_t immediate = 0;
 /* the VM runs until this flag becomes 0 */
 int running = 1;
 

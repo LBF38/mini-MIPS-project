@@ -19,7 +19,7 @@ import sys
 class Assembly():
     instructionSwitch = {
         "comment": {
-            'regex': r"^\s*#.*$",
+            'regex': r"^\s*(#|\n|\r|\r\n).*$",
             'opcode': 99,
             'format': 'r'
         },
