@@ -5,8 +5,8 @@
 #include <string.h>
 #include "vm.h"
 
-unsigned memory[MEMORY_SIZE];
-unsigned registers[NUM_REGS];
+u_int32_t memory[MEMORY_SIZE];
+u_int32_t registers[NUM_REGS];
 
 /* program counter */
 int program_counter = 0;
@@ -76,6 +76,17 @@ void read_file(char *filename)
     }
     // printf("i = %d\n",i);
 }
+unsigned sign_extend(unsigned x, int bit_count)
+{
+    // printf("sign extend");
+    printf("%d\n", x);
+    printf("x négatif ? %d\n", x < 0);
+    if ((x >> (15)) & 1)
+    {
+        x |= (0xFFFF << bit_count);
+    }
+    return x;
+}
 
 void decode_r()
 {
@@ -87,7 +98,8 @@ void decode_i()
 {
     rd = (instruction >> 21) & 0x1f;
     rs = (instruction >> 16) & 0x1f;
-    immediate = instruction & 0xff;
+    immediate = instruction & 0xffff;
+    printf("%08X\n",immediate);
 }
 void decode_jr()
 {
@@ -457,7 +469,7 @@ void eval()
         break;
     default:
         perror("ERROR: unknown opcode\n");
-        printf("Opcode : %d\n", opcode);
+        printf("opcode : %d\n", opcode);
         running = 0;
         break;
     }
@@ -479,12 +491,6 @@ void run()
 
 int main(int argc, const char *argv[])
 {
-    // int i;
-    // for (i = 0; i < argc; i++)
-    // {
-    //     printf("argv[%d] = \"%s\" \n", i, argv[i]);
-    // }
-    // read_file("bin/destination.bin");
     if (argc >= 2)
     {
         char *filename = (char *)malloc(100 * sizeof(char));
