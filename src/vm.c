@@ -1,4 +1,4 @@
-
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -6,7 +6,7 @@
 #include "vm.h"
 
 u_int32_t memory[MEMORY_SIZE];
-u_int32_t registers[NUM_REGS];
+int registers[NUM_REGS];
 
 /* program counter */
 int program_counter = 0;
@@ -30,7 +30,7 @@ void print_memory()
     int j = 0;
     while (j < MEMORY_SIZE && memory[j] != 0)
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 15; i++)
         {
             printf("%08X ", memory[j++]);
         }
@@ -45,7 +45,7 @@ void show_registers()
     int i;
     printf("registers = ");
     for (i = 0; i < NUM_REGS; i++)
-        printf("%04X ", registers[i]);
+        printf("r%d = %04X ", i, registers[i]);
     printf("\n");
 }
 
@@ -76,17 +76,6 @@ void read_file(char *filename)
     }
     // printf("i = %d\n",i);
 }
-unsigned sign_extend(unsigned x, int bit_count)
-{
-    // printf("sign extend");
-    printf("%d\n", x);
-    printf("x négatif ? %d\n", x < 0);
-    if ((x >> (15)) & 1)
-    {
-        x |= (0xFFFF << bit_count);
-    }
-    return x;
-}
 
 void decode_r()
 {
@@ -98,8 +87,13 @@ void decode_i()
 {
     rd = (instruction >> 21) & 0x1f;
     rs = (instruction >> 16) & 0x1f;
-    immediate = instruction & 0xffff;
-    printf("%08X\n",immediate);
+    immediate = instruction & 0x0000ffff;
+
+    if ((immediate & 0x00008000) != 0)
+    {
+        immediate |= 0xffff0000;
+    }
+    printf("%08X\n", immediate);
 }
 void decode_jr()
 {
@@ -284,52 +278,54 @@ void op_load()
     printf("load r%d r%d %d\n", rd, rs, immediate);
     if (rs + immediate >= MEMORY_SIZE)
     {
-        perror("Error load operator: indexError. Can't access in memory.\n");
+        fprintf(stderr,"Error load operator: indexError. Can't access in memory. (rs=%d, imm=%d)\n",rs,immediate);
         exit(-1);
     }
-    write_registers(rd, memory[rs + immediate]);
+    write_registers(rd, memory[registers[rs] + immediate]);
 }
 void op_store()
 {
     decode_i();
     printf("store r%d r%d %d\n", rd, rs, immediate);
-    if (rs + immediate >= MEMORY_SIZE)
+    if ((rs + immediate >= MEMORY_SIZE) && (rs+immediate<=0))
     {
-        perror("Error store operator: indexError. Can't access in memory.\n");
+        fprintf(stderr,"Error store operator: indexError. Can't access in memory. (rs=%d, imm=%d)\n",rs,immediate);
         exit(-1);
     }
-    memory[rs + immediate] = registers[rd]; // valeur du registre à stocker !!
+    memory[registers[rs] + immediate] = registers[rd]; // valeur du registre à stocker !!
 }
 void op_jmpr()
 {
     decode_jr();
     printf("jmp r%d r%d\n", rd, ra);
     write_registers(rd, program_counter);
-    program_counter = ra - 1; // pour être à ra au prochain tour. (program_counter++ à la fin de op_jmpr dans run())
+    program_counter = registers[ra];
 }
 void op_jmpi()
 {
     decode_ji();
     printf("jmp r%d %d\n", rd, addr);
     write_registers(rd, program_counter);
-    program_counter = addr - 1;
+    program_counter = addr;
 }
 void op_braz()
 {
     decode_b();
     printf("braz r%d %d\n", rs, addr);
-    if (rs == 0)
+    if (registers[rs] == 0)
     {
-        program_counter = addr - 1;
+        printf("rs == 0");
+        program_counter = addr;
     }
 }
 void op_branz()
 {
     decode_b();
     printf("branz r%d %d\n", rs, addr);
-    if (rs != 0)
+    if (registers[rs] != 0)
     {
-        program_counter = addr - 1;
+        printf("rs != 0\n");
+        program_counter = addr;
     }
 }
 void op_scall()
@@ -350,7 +346,7 @@ void op_scall()
         printf("%d\n", registers[20]);
         break;
     case 3:
-        printf("%c\n", registers[20]);
+        printf("%c\n", registers[20] & 0x7f);
         break;
     // case 4:
     //     // char *r20 = registers[20];
@@ -479,14 +475,14 @@ void run()
 {
     while (running)
     {
-        show_registers();
-        instruction = memory[program_counter];
+        // show_registers();
+        instruction = memory[program_counter++];
         opcode = (instruction >> 26) & 0x3f;
         eval();
-        program_counter++;
+        // program_counter++;
     }
     printf("END of program\n");
-    show_registers();
+    // show_registers();
 }
 
 int main(int argc, const char *argv[])
@@ -497,6 +493,7 @@ int main(int argc, const char *argv[])
         strcpy(filename, argv[1]);
         read_file(filename);
         free(filename);
+        // print_memory();
         run();
         // print_memory();
         // printf("memory[10] = %d\n",memory[10]);
