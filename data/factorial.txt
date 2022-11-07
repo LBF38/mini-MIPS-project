@@ -1,0 +1,21 @@
+    add r2 r0 27 # init stack pointer
+    add r20 r0 3 # set 3 as argument
+    jmp r1 factorial
+    stop
+factorial:
+    sub r2 r2 1
+    store r1 r2 0
+    sub r2 r2 1
+    store r4 r2 0
+    seq r4 r20 1
+    branz r4 fact_ret
+    add r4 r20 0
+    sub r20 r20 1
+    jmp r1 factorial
+    mul r20 r4 r20
+fact_ret:
+    load r4 r2 0
+    add r2 r2 1
+    load r1 r2 0
+    add r2 r2 1 
+    jmp r0 r1
