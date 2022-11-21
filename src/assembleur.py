@@ -28,6 +28,11 @@ class Assembly():
             'opcode': 99,
             'format': 'r'
         },
+        "data": {
+            'regex': r"^\s*([0-9]*)\s*$",
+            'opcode': 99,
+            'format': 'data'
+        },
         'add': {
             'regex': r"^\s*(add)\s+r(\d+)\s+r(\d+)\s+r(\d+)",
             'opcode': 2,
@@ -192,11 +197,11 @@ class Assembly():
     address = 0
     labels = {}
     labels_used = {}
-    opcode=0
-    arg1=0
-    arg2=0
-    arg3=0
-    format='r'
+    opcode = 0
+    arg1 = 0
+    arg2 = 0
+    arg3 = 0
+    format = 'r'
 
     def __init__(self, source, destination) -> None:
         print("This is the Assembly class to assemble files for a mini-MIPS Virtual Machine.\n")
@@ -309,6 +314,8 @@ class Assembly():
                 return matching.group(3)
         if self.format in 's':
             self.arg1 = int(matching.group(2))
+        if self.format in 'data':
+            self.arg1 = int(matching.group(1))
 
     def write_binary_file(self, destination: str = "bin/destination.bin"):
         """
@@ -348,7 +355,8 @@ class Encode():
             'ji': self.encode_ji(),
             'b': self.encode_b(),
             's': self.encode_s(),
-            'h': self.encode_h()
+            'h': self.encode_h(),
+            'data':self.encode_data()
         }
         return switch[self.format]
 
@@ -423,6 +431,12 @@ class Encode():
         opcode = self.opcode << 26
         binary_instruction = opcode
         return binary_instruction
+
+    def encode_data(self):
+        """
+        Convert the recognized instruction into a binary instruction
+        """
+        return self.arg1
 
 
 if __name__ == "__main__":

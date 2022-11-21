@@ -44,10 +44,10 @@
 #add r1 r0 9
 #add r20 r1 r0
 #scall 1
-add r1 r0 3
-add r2 r0 2
-store r1 r2 8	    # mem[ra + offset] <= rs    (29) checked instruction. Error: Stored the register number and not its value. Resolved.
-load r2 r2 8      # checked instruction.
+#add r1 r0 3
+#add r2 r0 2
+#store r1 r2 8	    # mem[ra + offset] <= rs    (29) checked instruction. Error: Stored the register number and not its value. Resolved.
+#load r2 r2 8      # checked instruction.
 #
 # Branchements
 #jmp ra, rd		    # rd <= PC ; PC <= ra           (30)
@@ -79,4 +79,11 @@ load r2 r2 8      # checked instruction.
 #scall 4             # write string pointed to by r20(34) //to checked. Don't know how to correctly implement.
 #
 # Arrêt machine
-stop                # arrêt machine                 (35) checked instruction.
+#stop                # arrêt machine                 (35) checked instruction.
+
+#On teste l'utilisation de data numérique dans un code simple d'assembleur
+    load r20 r0 data
+    scall 1
+    stop    
+data:
+    5
