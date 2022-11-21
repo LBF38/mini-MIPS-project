@@ -49,13 +49,13 @@ void show_registers()
     printf("\n");
 }
 
-void write_registers(int index, int value)
+void write_registers(int address, int value)
 {
-    if (index == 0)
+    if (address == 0)
     {
         value = 0;
     }
-    registers[index] = value;
+    registers[address] = value;
 }
 
 void read_file(char *filename)
@@ -278,7 +278,7 @@ void op_load()
     printf("load r%d r%d %d\n", rd, rs, immediate);
     if (rs + immediate >= MEMORY_SIZE)
     {
-        fprintf(stderr,"Error load operator: indexError. Can't access in memory. (rs=%d, imm=%d)\n",rs,immediate);
+        fprintf(stderr, "Error load operator: indexError. Can't access in memory. (rs=%d, imm=%d)\n", rs, immediate);
         exit(-1);
     }
     write_registers(rd, memory[registers[rs] + immediate]);
@@ -287,9 +287,9 @@ void op_store()
 {
     decode_i();
     printf("store r%d r%d %d\n", rd, rs, immediate);
-    if ((rs + immediate >= MEMORY_SIZE) && (rs+immediate<=0))
+    if ((rs + immediate >= MEMORY_SIZE) && (rs + immediate <= 0))
     {
-        fprintf(stderr,"Error store operator: indexError. Can't access in memory. (rs=%d, imm=%d)\n",rs,immediate);
+        fprintf(stderr, "Error store operator: indexError. Can't access in memory. (rs=%d, imm=%d)\n", rs, immediate);
         exit(-1);
     }
     memory[registers[rs] + immediate] = registers[rd]; // valeur du registre à stocker !!

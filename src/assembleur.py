@@ -3,13 +3,6 @@
 # Utilisation de Regex pour vérifier les syntaxes par exemple.
 # Lecture de fichiers, vérification des expressions, convertir en binaire selon règles binaires.
 
-# TODO vérifier fonctionnement des fonctions pour l'opérateur ADD et ADDI
-# TODO tester le fichier binaire dans la VM / ISS.
-# TODO implémenter de nouvelles commandes simples (SUB, MULT, ...)
-# TODO gérer les labels
-# TODO implémenter de nouvelles commandes complexes (JUMP, B)
-
-
 # Imports
 import re
 import struct
