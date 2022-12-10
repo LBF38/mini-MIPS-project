@@ -349,7 +349,7 @@ class Encode():
             'b': self.encode_b(),
             's': self.encode_s(),
             'h': self.encode_h(),
-            'data':self.encode_data()
+            'data': self.encode_data()
         }
         return switch[self.format]
 
@@ -433,23 +433,23 @@ class Encode():
 
 
 if __name__ == "__main__":
-    # print("Testing the check function")
-    # check_instruction("  addi r0 r1 100")
-    # instruction_bin = encode(3, 5, 3, 4, 'i')
-    # print(instruction_bin)
-    # write_binary_file(instruction_bin)
-    print("Testing to assemble")
     try:
         source = sys.argv[1]
         # print(source)
     except IndexError as error:
         print("No source file given. Please provide a source file to assemble.")
         # TODO : faire une fonction pour les usages du fichier et les options possibles.
-        print("Usage:  ...in the work...")
+        print(f"""
+Usage:  {sys.argv[0]} <source_file> <destination_file>
+
+Example: {sys.argv[0]} data/program.asm bin/program.bin
+
+If no destination file is given, the default name will be bin/filename.bin""")
         sys.exit(-1)
     try:
         destination = sys.argv[2]
     except IndexError:
+        # Default compilation named file => bin/filename.bin (where filename is the name of the given source file)
         matching = re.compile(r"^.*/(\w+).(\w+\b)").match(sys.argv[1])
         destination = f"bin/{matching.group(1)}.bin"
         print(

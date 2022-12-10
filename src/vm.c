@@ -1,8 +1,3 @@
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
 #include "vm.h"
 
 u_int32_t memory[MEMORY_SIZE];
@@ -10,6 +5,7 @@ int registers[NUM_REGS];
 
 /* program counter */
 int program_counter = 0;
+
 /* instruction fields */
 int instruction;
 int opcode = 0;

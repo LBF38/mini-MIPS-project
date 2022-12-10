@@ -5,6 +5,12 @@
  * @version 1.0
  */
 
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+
 #define MEMORY_SIZE 2048
 #define NUM_REGS 32
 
