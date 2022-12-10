@@ -1,21 +1,29 @@
-    add r2 r0 27 # init stack pointer
-    add r20 r0 3 # set 3 as argument
-    jmp r1 factorial
-    stop
+    add r2 r0 500       # init stack pointer (peut être limitant pour les gros calculs => dépend aussi de la mémoire)
+    scall 0             # On demande une valeur à l'utilisateur pour obtenir son factoriel.
+    seq r4 r20 0        # if argument (r20) == 0
+    branz r4 fact_zero  # return 1
+    # add r20 r0 3      # set 3 as argument
+    jmp r1 factorial    # call factorial with argument
+    stop                # stop program
 factorial:
-    sub r2 r2 1
-    store r1 r2 0
-    sub r2 r2 1
-    store r4 r2 0
-    seq r4 r20 1
-    branz r4 fact_ret
-    add r4 r20 0
-    sub r20 r20 1
-    jmp r1 factorial
-    mul r20 r4 r20
+    sub r2 r2 1         # save return address
+    store r1 r2 0       # save return address in memory[stack pointer (r2 here)]
+    sub r2 r2 1         # save argument
+    store r4 r2 0       # save argument in memory[stack pointer (r2 here)]
+    seq r4 r20 1        # if argument (r20) == 1
+    branz r4 fact_ret   # return 1
+    add r4 r20 0        # set argument as return value
+    sub r20 r20 1       # decrement argument
+    jmp r1 factorial    # call factorial with decremented argument
+    mul r20 r4 r20      # multiply return value by argument
 fact_ret:
-    load r4 r2 0
-    add r2 r2 1
-    load r1 r2 0
-    add r2 r2 1 
-    jmp r0 r1
+    scall 1             # On affiche le résultat.
+    load r4 r2 0        # restore argument
+    add r2 r2 1         # restore stack pointer
+    load r1 r2 0        # restore return address
+    add r2 r2 1         # restore stack pointer
+    jmp r0 r1           # return to caller
+fact_zero:
+    add r20 r0 1        # set 1 as argument
+    scall 1             # On affiche le résultat.
+    stop                # stop program

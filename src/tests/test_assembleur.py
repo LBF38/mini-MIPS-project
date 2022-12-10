@@ -8,14 +8,13 @@ sys.path.insert(0, os.path.join(os.getcwd(), "src"))
 import assembleur as asm
 
 
-
 class TestAssembleur(unittest.TestCase):
     def setUp(self):
-        self.addi_instruction = "addi r0 r1 100"
+        self.addi_instruction = "add r0 r1 100"
         self.commented_line = "# this is a commented line"
         self.add_instruction_with_comment = "add r0 r1 100 #this is a comment"
         self.writefile()
-        self.the_lines = asm.read_file("testfile.txt")
+        # self.the_lines = asm.Assembly().read_file("testfile.txt")
 
     def writefile(self):
         f = open(os.path.join("src", "tests", "testfile.txt"), "w")
@@ -24,11 +23,18 @@ class TestAssembleur(unittest.TestCase):
         f.write(self.add_instruction_with_comment+"\n")
         f.close()
 
-    def testCheckInstruction(self):
+    # def testCheckInstruction(self):
+    #     """
+    #     Teste la partie vérification d'une instruction
+    #     """
+    #     self.assertEqual(asm.check_instruction(self.addi_instruction), 1)
+
+    def testAssembling(self):
         """
-        Teste la partie vérification d'une instruction
+        Teste l'assemblage d'un fichier
         """
-        self.assertEqual(asm.check_instruction(self.addi_instruction), 1)
+        asm.Assembly(os.getcwd() + "/src/tests/testfile.txt", "bin/testfile.bin")
+        self.assertTrue(os.path.isfile("bin/testfile.bin"))
 
     # def testReadFile(self):
     #     """
