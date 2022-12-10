@@ -16,12 +16,14 @@ Lien vers le fichier qui contient l'ensemble des instructions disponibles dans l
 ### Assembleur
 
 Pour lancer l'assembleur, utiliser le format :
-```
+
+```bash
 ./src/assembleur.py [dossier/source.txt] [dossier/destination.bin]
 ```
 
 Exemple :
-```
+
+```bash
 ./src/assembleur.py data/asm.txt bin/asm.bin
 ```
 
@@ -30,12 +32,14 @@ Exemple :
 ### VM
 
 Pour lancer la VM, utiliser le format :
-```
+
+```bash
 ./bin/vm bin/[source].bin
 ```
 
 Exemple :
-```
+
+```bash
 ./bin/vm bin/asm.bin
 ```
 
