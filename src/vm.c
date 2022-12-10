@@ -475,7 +475,6 @@ void run()
         instruction = memory[program_counter++];
         opcode = (instruction >> 26) & 0x3f;
         eval();
-        // program_counter++;
     }
     printf("END of program\n");
     // show_registers();
