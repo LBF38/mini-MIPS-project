@@ -49,6 +49,38 @@ Exemple :
 
 Ces commandes sont exécutés dans le dossier du projet soit par exemple sous Linux : `~/projet_VM_archiNum$`
 
+## Démonstration
+
+Pour démontrer l'utilisation de l'assembleur et de la VM, vous pourrez trouver des exemples de codes en assembleur dans le dossier `data/`.
+
+Ces fichiers respectent la sémantique choisie pour les instructions de base de la VM. Vous pouvez la retrouver dans le fichier [instructions.md](instructions.md).
+
+### Liste des fichiers d'exemples
+
+Je vais vous présenter les fichiers d'exemples que vous pouvez trouver dans le dossier `data/`, en vous donnant une courte explication de leur fonctionnement.
+
+- `asm.txt` : Ce fichier contient un exemple de code en assembleur. Il est utilisé pour démontrer l'utilisation de l'assembleur. Il permet de tester les commentaires, les instructions de base, les labels et les lignes vides.
+- `affiche12.txt` : Ce fichier contient un exemple de code en assembleur pour afficher 12 en effectuant une boucle de 12 itérations.
+- `fibonnaci.txt` : Ce fichier contient un exemple de code en assembleur pour afficher la suite de Fibonnaci.
+- `factorial.txt` : Ce fichier contient un exemple de code en assembleur pour afficher le factoriel d'un nombre.
+- `boucle.txt` : Ce fichier contient un exemple de code en assembleur pour lancer une boucle et afficher son indice.
+- `helloworld.txt` : Ce fichier contient un exemple de code en assembleur pour afficher "Hello World!".
+
+> Note: `helloworld.txt` ne fonctionne pas pour le moment car les données de type `string` ne sont pas encore reconnues ni traitées par l'assembleur.
+
+- `instruction_test.txt` : Ce fichier contient l'ensemble des instructions disponibles dans ma sémantique d'asm. Il m'a permis de tester toutes les fonctions une à une et de vérifier leur fonctionnement, lorsque j'avais des problèmes d'implémentation.
+
+> Une meilleure méthode aurait été de faire des tests unitaires directement sur l'assembleur. Je les implémenterais si j'ai le temps. (voir [#10](https://github.com/LBF38/projet_VM_archiNum/issues/10))
+
+### Autres idées de programme à réaliser
+
+Vous trouverez ici quelques idées de programmes à réaliser en assembleur pour tester l'assembleur et la VM. Ces idées viennent du cours d'Architecture des ordinateurs de l'ENSTA Bretagne et des idées des professeurs.
+
+- Calcul des points de la droite $y = ax + b$ à partir des paramètres fournis par l'utilisateur.
+- Calcul matriciel, multiplication matricielle.
+- Implémentation de l'Algorithme de Bresenham pour tracer une droite. ([Algorithme de Bresenham](https://fr.wikipedia.org/wiki/Algorithme_de_trac%C3%A9_de_segment_de_Bresenham))
+- Suite de Syracuse. ([Suite de Syracuse](https://fr.wikipedia.org/wiki/Suite_de_Syracuse))
+
 ## Ressources
 
 Lien vers l'article "VM in C" : [Register VM in C](https://en.wikibooks.org/wiki/Creating_a_Virtual_Machine/Register_VM_in_C)
