@@ -62,7 +62,13 @@ Je vais vous présenter les fichiers d'exemples que vous pouvez trouver dans le 
 - `asm.txt` : Ce fichier contient un exemple de code en assembleur. Il est utilisé pour démontrer l'utilisation de l'assembleur. Il permet de tester les commentaires, les instructions de base, les labels et les lignes vides.
 - `affiche12.txt` : Ce fichier contient un exemple de code en assembleur pour afficher 12 en effectuant une boucle de 12 itérations.
 - `fibonnaci.txt` : Ce fichier contient un exemple de code en assembleur pour afficher la suite de Fibonnaci.
-- `factorial.txt` : Ce fichier contient un exemple de code en assembleur pour afficher le factoriel d'un nombre.
+- `factorial.txt` : Ce fichier contient un exemple de code en assembleur pour afficher le factoriel d'un nombre. On demande à l'utilisateur une valeur à calculer et on peut ainsi calculer la factorielle associée. On peut demander une valeur entre 0 et 12.
+
+> Pour ce programme, le facteur limitant est le stack pointer qui peut être trop faible par rapport à la valeur demandée par l'utilisateur.
+> A voir comment on peut améliorer cela en calculant une valeur de stack pointer plus grande en fonction de la valeur demandée par l'utilisateur et de la mémoire maximale disponible.
+>
+> On est également limité par la représentation des nombres. On ne peut pas dépasser 2^32-1 (4294967295) car on utilise un `uint32_t` pour stocker les nombres.
+
 - `boucle.txt` : Ce fichier contient un exemple de code en assembleur pour lancer une boucle et afficher son indice.
 - `helloworld.txt` : Ce fichier contient un exemple de code en assembleur pour afficher "Hello World!".
 
