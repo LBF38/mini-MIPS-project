@@ -21,12 +21,12 @@ class Assembly():
             'format': 'r'
         },
         "label": {
-            'regex': r"^(.*):\s*$",
+            'regex': r"^(.+):\s*$",
             'opcode': 99,
             'format': 'r'
         },
         "data": {
-            'regex': r"^\s*([0-9]*)\s*$",
+            'regex': r"^\s*([0-9]+)\s*#?(.*)$",
             'opcode': 99,
             'format': 'data'
         },
