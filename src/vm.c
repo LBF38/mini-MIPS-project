@@ -1,8 +1,3 @@
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
 #include "vm.h"
 
 u_int32_t memory[MEMORY_SIZE];
@@ -10,6 +5,7 @@ int registers[NUM_REGS];
 
 /* program counter */
 int program_counter = 0;
+
 /* instruction fields */
 int instruction;
 int opcode = 0;
@@ -23,6 +19,9 @@ int n = 0;
 u_int32_t immediate = 0;
 /* the VM runs until this flag becomes 0 */
 int running = 1;
+
+/* Debug flag */
+int debug = 0;
 
 void print_memory()
 {
@@ -49,32 +48,30 @@ void show_registers()
     printf("\n");
 }
 
-void write_registers(int index, int value)
+void write_registers(int address, int value)
 {
-    if (index == 0)
+    if (address == 0)
     {
         value = 0;
     }
-    registers[index] = value;
+    registers[address] = value;
 }
 
 void read_file(char *filename)
 {
-    printf("This is the read_file function. We read a binary file.\n");
+    printf(GREEN "This is the read_file function. We read a binary file.\n" RESET);
     FILE *inputFile = fopen(filename, "rb");
     // Gestion erreur ouverture fichier
     if (inputFile == NULL)
     {
-        perror("==vm.c== Error opening file");
+        perror(RED "==vm.c== Error opening file" RESET);
         exit(-1);
     }
     int i = 0;
     while (fread(&memory[i], 4, 1, inputFile))
     {
-        // print_memory();
         i++;
     }
-    // printf("i = %d\n",i);
 }
 
 void decode_r()
@@ -93,7 +90,8 @@ void decode_i()
     {
         immediate |= 0xffff0000;
     }
-    printf("%08X\n", immediate);
+    if (debug)
+        printf(YELLOW "%08X\n" RESET, immediate);
 }
 void decode_jr()
 {
@@ -118,45 +116,52 @@ void decode_s()
 void op_add()
 {
     decode_r();
-    printf("add r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "add r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] + registers[rs2]);
 }
 
 void op_addi()
 {
     decode_i();
-    printf("add r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "add r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] + immediate);
 }
 
 void op_sub()
 {
     decode_r();
-    printf("sub r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "sub r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] - registers[rs2]);
 }
 void op_subi()
 {
     decode_i();
-    printf("sub r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "sub r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] - immediate);
 }
 void op_mul()
 {
     decode_r();
-    printf("mul r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "mul r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] * registers[rs2]);
 }
 void op_muli()
 {
     decode_i();
-    printf("mul r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "mul r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] * immediate);
 }
 void op_div()
 {
     decode_r();
-    printf("div r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "div r%d r%d r%d\n" RESET, rd, rs1, rs2);
     if (registers[rs2] == 0)
     {
         fprintf(stderr, "error input: division by zero\n");
@@ -167,7 +172,8 @@ void op_div()
 void op_divi()
 {
     decode_i();
-    printf("div r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "div r%d r%d %d\n" RESET, rd, rs, immediate);
     if (immediate == 0)
     {
         fprintf(stderr, "error input: division by zero\n");
@@ -178,107 +184,124 @@ void op_divi()
 void op_and()
 {
     decode_r();
-    printf("and r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "and r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] && registers[rs2]);
 }
 void op_andi()
 {
     decode_i();
-    printf("and r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "and r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] && immediate);
 }
 void op_or()
 {
     decode_r();
-    printf("or r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "or r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] || registers[rs2]);
 }
 void op_ori()
 {
     decode_i();
-    printf("or r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "or r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] || immediate);
 }
 void op_xor()
 {
     decode_r();
-    printf("xor r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "xor r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] ^ registers[rs2]);
 }
 void op_xori()
 {
     decode_i();
-    printf("xor r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "xor r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] ^ immediate);
 }
 void op_shl()
 {
     decode_r();
-    printf("shl r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "shl r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] << registers[rs2]);
 }
 void op_shli()
 {
     decode_i();
-    printf("shl r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "shl r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] << immediate);
 }
 void op_shr()
 {
     decode_r();
-    printf("shr r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "shr r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] >> registers[rs2]);
 }
 void op_shri()
 {
     decode_i();
-    printf("shr r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "shr r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] >> immediate);
 }
 void op_slt()
 {
     decode_r();
-    printf("slt r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "slt r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] < registers[rs2]);
 }
 void op_slti()
 {
     decode_i();
-    printf("slt r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "slt r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] < immediate);
 }
 void op_sle()
 {
     decode_r();
-    printf("sle r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "sle r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] <= registers[rs2]);
 }
 void op_slei()
 {
     decode_i();
-    printf("sle r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "sle r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] <= immediate);
 }
 void op_seq()
 {
     decode_r();
-    printf("seq r%d r%d r%d\n", rd, rs1, rs2);
+    if (debug)
+        printf(YELLOW "seq r%d r%d r%d\n" RESET, rd, rs1, rs2);
     write_registers(rd, registers[rs1] == registers[rs2]);
 }
 void op_seqi()
 {
     decode_i();
-    printf("seq r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "seq r%d r%d %d\n" RESET, rd, rs, immediate);
     write_registers(rd, registers[rs] == immediate);
 }
 void op_load()
 {
     // A vérifier
     decode_i();
-    printf("load r%d r%d %d\n", rd, rs, immediate);
+    if (debug)
+        printf(YELLOW "load r%d r%d %d\n" RESET, rd, rs, immediate);
     if (rs + immediate >= MEMORY_SIZE)
     {
-        fprintf(stderr,"Error load operator: indexError. Can't access in memory. (rs=%d, imm=%d)\n",rs,immediate);
+        fprintf(stderr, "Error load operator: indexError. Can't access in memory. (rs=%d, imm=%d)\n", rs, immediate);
         exit(-1);
     }
     write_registers(rd, memory[registers[rs] + immediate]);
@@ -286,10 +309,11 @@ void op_load()
 void op_store()
 {
     decode_i();
-    printf("store r%d r%d %d\n", rd, rs, immediate);
-    if ((rs + immediate >= MEMORY_SIZE) && (rs+immediate<=0))
+    if (debug)
+        printf(YELLOW "store r%d r%d %d\n" RESET, rd, rs, immediate);
+    if ((rs + immediate >= MEMORY_SIZE) && (rs + immediate <= 0))
     {
-        fprintf(stderr,"Error store operator: indexError. Can't access in memory. (rs=%d, imm=%d)\n",rs,immediate);
+        fprintf(stderr, "Error store operator: indexError. Can't access in memory. (rs=%d, imm=%d)\n", rs, immediate);
         exit(-1);
     }
     memory[registers[rs] + immediate] = registers[rd]; // valeur du registre à stocker !!
@@ -297,34 +321,40 @@ void op_store()
 void op_jmpr()
 {
     decode_jr();
-    printf("jmp r%d r%d\n", rd, ra);
+    if (debug)
+        printf(YELLOW "jmp r%d r%d\n" RESET, rd, ra);
     write_registers(rd, program_counter);
     program_counter = registers[ra];
 }
 void op_jmpi()
 {
     decode_ji();
-    printf("jmp r%d %d\n", rd, addr);
+    if (debug)
+        printf(YELLOW "jmp r%d %d\n" RESET, rd, addr);
     write_registers(rd, program_counter);
     program_counter = addr;
 }
 void op_braz()
 {
     decode_b();
-    printf("braz r%d %d\n", rs, addr);
+    if (debug)
+        printf(YELLOW "braz r%d %d\n" RESET, rs, addr);
     if (registers[rs] == 0)
     {
-        printf("rs == 0");
+        if (debug)
+            printf(YELLOW "rs == 0\n" RESET);
         program_counter = addr;
     }
 }
 void op_branz()
 {
     decode_b();
-    printf("branz r%d %d\n", rs, addr);
+    if (debug)
+        printf(YELLOW "branz r%d %d\n" RESET, rs, addr);
     if (registers[rs] != 0)
     {
-        printf("rs != 0\n");
+        if (debug)
+            printf(YELLOW "rs != 0\n" RESET);
         program_counter = addr;
     }
 }
@@ -332,9 +362,9 @@ void op_scall()
 {
     // vérifier toutes les fonctionnalités de cette fonction.
     decode_s();
-    printf("scall %d\n", n);
+    if (debug)
+        printf(YELLOW "scall %d\n" RESET, n);
     int userInput;
-    // int r20;
     switch (n)
     {
     case 0:
@@ -358,7 +388,8 @@ void op_scall()
 }
 void op_stop()
 {
-    printf("stop\n");
+    if (debug)
+        printf(YELLOW "stop\n" RESET);
     running = 0;
 }
 
@@ -464,8 +495,8 @@ void eval()
         op_stop();
         break;
     default:
-        perror("ERROR: unknown opcode\n");
-        printf("opcode : %d\n", opcode);
+        perror(RED "ERROR: unknown opcode\n");
+        printf("opcode : %d\n" RESET, opcode);
         running = 0;
         break;
     }
@@ -479,33 +510,34 @@ void run()
         instruction = memory[program_counter++];
         opcode = (instruction >> 26) & 0x3f;
         eval();
-        // program_counter++;
     }
-    printf("END of program\n");
+    printf(GREEN "END of program\n" RESET);
     // show_registers();
 }
 
-int main(int argc, const char *argv[])
+int main(int argc, char *argv[])
 {
-    if (argc >= 2)
+    if (argc < 2)
     {
-        char *filename = (char *)malloc(100 * sizeof(char));
-        strcpy(filename, argv[1]);
-        read_file(filename);
-        free(filename);
-        // print_memory();
-        run();
-        // print_memory();
-        // printf("memory[10] = %d\n",memory[10]);
+        printf("Usage: %s <filename>\n", argv[0]);
+        printf("Options: -d (debug mode)\n");
+        return EXIT_FAILURE;
     }
-    else
+    for (int i = 0; i < argc; i++)
     {
-        int i;
-        for (i = 0; i < argc; i++)
+        if (strcmp(argv[i], "-d") == 0)
         {
-            printf("argv[%d] = \"%s\" \n", i, argv[i]);
+            debug = 1;
         }
     }
+    char *filename = (char *)malloc(100 * sizeof(char));
+    strcpy(filename, argv[1]);
+    read_file(filename);
+    free(filename);
+    // print_memory();
+    run();
+    // print_memory();
+    // printf("memory[10] = %d\n",memory[10]);
 
     return EXIT_SUCCESS;
 }

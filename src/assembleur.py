@@ -3,13 +3,6 @@
 # Utilisation de Regex pour vérifier les syntaxes par exemple.
 # Lecture de fichiers, vérification des expressions, convertir en binaire selon règles binaires.
 
-# TODO vérifier fonctionnement des fonctions pour l'opérateur ADD et ADDI
-# TODO tester le fichier binaire dans la VM / ISS.
-# TODO implémenter de nouvelles commandes simples (SUB, MULT, ...)
-# TODO gérer les labels
-# TODO implémenter de nouvelles commandes complexes (JUMP, B)
-
-
 # Imports
 import re
 import struct
@@ -17,6 +10,10 @@ import sys
 
 
 class Assembly():
+    """Assembly class
+    This class is used to assemble a file in asm format to a binary file
+    """
+
     instructionSwitch = {
         "comment": {
             'regex': r"^\s*(#|\n|\r|\r\n).*$",
@@ -24,12 +21,12 @@ class Assembly():
             'format': 'r'
         },
         "label": {
-            'regex': r"^(.*):\s*$",
+            'regex': r"^(.+):\s*$",
             'opcode': 99,
             'format': 'r'
         },
         "data": {
-            'regex': r"^\s*([0-9]*)\s*$",
+            'regex': r"^\s*([0-9]+)\s*#?(.*)$",
             'opcode': 99,
             'format': 'data'
         },
@@ -204,6 +201,9 @@ class Assembly():
     format = 'r'
 
     def __init__(self, source, destination) -> None:
+        """
+        Class constructor
+        """
         print("This is the Assembly class to assemble files for a mini-MIPS Virtual Machine.\n")
         self.read_file(source)
         self.assembling_file(destination)
@@ -217,6 +217,9 @@ class Assembly():
         file.close()
 
     def assembling_file(self, destination):
+        """
+        This function will assemble the file
+        """
         self.binary_instruction_list = []
         # self.check_labels()
         for line in self.the_lines:
@@ -283,6 +286,9 @@ class Assembly():
             f"error reading instruction : no matching instruction with line : {line}")
 
     def store_instruction(self, matching):
+        """
+        This function will store the instruction in the class for later encoding it
+        """
         if self.format in 'r':
             self.arg1 = int(matching.group(2))
             self.arg2 = int(matching.group(3))
@@ -328,6 +334,10 @@ class Assembly():
         out_file.close()
 
     def check_labels(self):
+        """
+        Check if there are labels in the file and store them in a dictionary
+        It will be used to replace the label by the address of the instruction
+        """
         self.labels = {}
         for i, line in enumerate(self.the_lines):
             matching = re.compile(
@@ -340,6 +350,9 @@ class Assembly():
 
 class Encode():
     def __init__(self, opcode, arg1, arg2, arg3, format) -> None:
+        """
+        Class constructor
+        """
         # print("This is the encoding class to encode instructions")
         self.opcode = opcode
         self.arg1 = arg1
@@ -348,6 +361,10 @@ class Encode():
         self.format = format
 
     def encode(self):
+        """
+        Simple switch to call the right encoding function
+        (there is no switch in python for now => maybe in 3.10 ?)
+        """
         switch = {
             'r': self.encode_r(),
             'i': self.encode_i(),
@@ -356,7 +373,7 @@ class Encode():
             'b': self.encode_b(),
             's': self.encode_s(),
             'h': self.encode_h(),
-            'data':self.encode_data()
+            'data': self.encode_data()
         }
         return switch[self.format]
 
@@ -377,6 +394,7 @@ class Encode():
     def encode_i(self):
         """
         Convert the recognized instruction into a binary instruction
+        Format: opcode rd rs im
         """
         opcode = self.opcode << 26
         rd = self.arg1 << 21
@@ -388,6 +406,7 @@ class Encode():
     def encode_jr(self):
         """
         Convert the recognized instruction into a binary instruction
+        Format: opcode rd ra
         """
         opcode = self.opcode << 26
         rd = self.arg1 << 21
@@ -398,6 +417,7 @@ class Encode():
     def encode_ji(self):
         """
         Convert the recognized instruction into a binary instruction
+        Format: opcode rd addr
         """
         opcode = self.opcode << 26
         rd = self.arg1 << 21
@@ -408,6 +428,7 @@ class Encode():
     def encode_b(self):
         """
         Convert the recognized instruction into a binary instruction
+        Format: opcode rs addr
         """
         opcode = self.opcode << 26
         rs = self.arg1 << 21
@@ -418,6 +439,7 @@ class Encode():
     def encode_s(self):
         """
         Convert the recognized instruction into a binary instruction
+        Format: opcode n
         """
         opcode = self.opcode << 26
         n = self.arg1 & 0x03ffffff
@@ -427,6 +449,7 @@ class Encode():
     def encode_h(self):
         """
         Convert the recognized instruction into a binary instruction
+        Format: opcode
         """
         opcode = self.opcode << 26
         binary_instruction = opcode
@@ -435,28 +458,28 @@ class Encode():
     def encode_data(self):
         """
         Convert the recognized instruction into a binary instruction
+        Format: data
         """
         return self.arg1
 
 
 if __name__ == "__main__":
-    # print("Testing the check function")
-    # check_instruction("  addi r0 r1 100")
-    # instruction_bin = encode(3, 5, 3, 4, 'i')
-    # print(instruction_bin)
-    # write_binary_file(instruction_bin)
-    print("Testing to assemble")
     try:
         source = sys.argv[1]
         # print(source)
     except IndexError as error:
         print("No source file given. Please provide a source file to assemble.")
-        # TODO : faire une fonction pour les usages du fichier et les options possibles.
-        print("Usage:  ...in the work...")
+        print(f"""
+Usage:  {sys.argv[0]} <source_file> <destination_file>
+
+Example: {sys.argv[0]} data/program.asm bin/program.bin
+
+If no destination file is given, the default name will be bin/filename.bin""")
         sys.exit(-1)
     try:
         destination = sys.argv[2]
     except IndexError:
+        # Default compilation named file => bin/filename.bin (where filename is the name of the given source file)
         matching = re.compile(r"^.*/(\w+).(\w+\b)").match(sys.argv[1])
         destination = f"bin/{matching.group(1)}.bin"
         print(
