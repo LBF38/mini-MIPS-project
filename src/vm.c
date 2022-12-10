@@ -520,6 +520,7 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
         printf("Usage: %s <filename>\n", argv[0]);
+        printf("Options: -d (debug mode)\n");
         return EXIT_FAILURE;
     }
     for (int i = 0; i < argc; i++)
