@@ -248,11 +248,11 @@ class Assembly():
                     self.labels_used[self.address] = label
                 self.binary_instruction_list.append(encodedInstruction)
                 self.address += 1
+        print(f"dict labels : {self.labels}")
         for key, value in self.labels_used.items():
             address = key
             label = value
             self.binary_instruction_list[address] = self.binary_instruction_list[address] | self.labels[label]
-        print(f"dict labels : {self.labels}")
         # store all assembled instructions into the output binary file
         self.write_binary_file(destination)
 

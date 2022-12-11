@@ -1,0 +1,44 @@
+# Programme pour calculer le carré d'une matrice 3x3
+    add r10 r0 3        # r10 = 3
+# On prévoit l'espace pour le résultat dans la mémoire (via offset)
+    mul r11 r10 r10     # r11 = 3*3
+# Début de la multiplication
+    add r1 r0 0         # r1 = 0 (i = 0)
+L5:
+    slt r2 r1 r10       # r2 = i < 3
+    braz r2 label_end   # Si i >= 3, on sort de la boucle
+    add r2 r0 0         # r2 = 0 (j = 0)
+L4:
+    slt r8 r2 r10       # r8 = j < 3
+    braz r8 L1          # Si j >= 3, on sort de la boucle
+    add r4 r0 0         # sinon, r4 = 0 (somme = 0)
+    add r5 r0 0         # r5 = 0 (k = 0)
+L2:
+    slt r6 r5 r10       # k < 3
+    braz r6 L3
+    # computation for adresse [i,k]
+    mul r6 r1 r10       # r6 as tmp
+    add  r6 r5 r6       # @[i,k] -> r6
+    # computation for adresse @[k,j]
+    mul  r7 r5 r10 
+    add  r7 r2 r7       # @[k,j] -> r7
+    load r8 r6 0        # a[i,k]
+    load r9 r7 0        # b[k,j]
+    mul  r8 r9 r8       # tmp=a[i,k]*b[k,j]
+    add  r4 r8 r4       # s+=tmp
+    add  r5 r5 1        # k++
+    jmp  r0 L2 
+L3:
+    mul r6 r1 r10 
+    add r6 r2 r6        # @[i,j] for C
+    add r6 r11 r6       # @[i,j]+OFFSET_C
+    store r4 r6 0       # c[i,j]=s
+    add r2 r2 1         # j++
+    jmp r0 L4       
+
+L1: 
+    add r1 r1 1         # i++
+    jmp r0 L5
+
+label_end:
+    stop                # Fin du programme
