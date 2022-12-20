@@ -329,7 +329,7 @@ class Assembly:
         """
         Write the binary file for the given instruction
         """
-        if not path.exists(destination):  # creates output folder if it doesn't exist
+        if not path.exists(path.dirname(destination)):  # creates output folder if it doesn't exist
             os.mkdir(path.dirname(destination))
         out_file = open(destination, "wb")
         print(self.binary_instruction_list)
