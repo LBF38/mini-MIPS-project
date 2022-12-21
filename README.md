@@ -132,6 +132,11 @@ You will find here some ideas of programs to be made in assembly to test the ass
 
 - Link to the article "VM in C" : [Register VM in C](https://en.wikibooks.org/wiki/Creating_a_Virtual_Machine/Register_VM_in_C)
 - Link to another ressource "LC-3 VM": [LC-3 VM](https://www.jmeiners.com/lc3-vm/index.html)
+- <details>
+  <summary>ASCII Table</summary>
+
+  ![Table ASCII](https://www.asciitable.com/asciifull.gif)
+  </details>
 
 ## Credits
 

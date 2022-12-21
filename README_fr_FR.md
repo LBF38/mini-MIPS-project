@@ -130,7 +130,11 @@ Vous trouverez ici quelques idées de programmes à réaliser en assembleur pour
 
 - Lien vers l'article "VM en C" : [Registre VM en C](https://en.wikibooks.org/wiki/Creating_a_Virtual_Machine/Register_VM_in_C)
 - Lien vers une autre ressource "LC-3 VM" : [LC-3 VM](https://www.jmeiners.com/lc3-vm/index.html)
+- <details>
+  <summary>Table ASCII</summary>
 
+  ![Table ASCII](https://www.asciitable.com/asciifull.gif)
+  </details>
 ## Crédits
 
 Ce projet a été réalisé par [Mathis URIEN (@LBF38)](https://github.com/lbf38), étudiant en Conception de Systèmes Numériques à l'ENSTA Bretagne.
