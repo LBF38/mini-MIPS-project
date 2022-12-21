@@ -4,8 +4,8 @@
 
 **README available in the following languages :**
 
-[![English documentation (en_US)](https://img.shields.io/badge/-en__US-blueviolet)](https://github.com/lbf38/mini-MIPS-project/README.md)
-[![French documentation (fr_FR)](https://img.shields.io/badge/-fr__FR-blueviolet)](https://github.com/lbf38/mini-MIPS-project/README_fr_FR.md)
+[![English documentation (en_US)](https://img.shields.io/badge/-en__US-blueviolet)](README.md)
+[![French documentation (fr_FR)](https://img.shields.io/badge/-fr__FR-blueviolet)](README_fr_FR.md)
 
 ## Table of contents
 
