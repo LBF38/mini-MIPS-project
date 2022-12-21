@@ -89,7 +89,7 @@ Exemple :
 
 Pour démontrer l'utilisation de l'assembleur et de la VM, vous pouvez trouver quelques exemples de code assembleur dans le dossier `data/`.
 
-Ces fichiers respectent la sémantique choisie pour les instructions de base de la VM. Vous pouvez la trouver dans le fichier [instructions.md](docs/instructions.md).
+Ces fichiers respectent la sémantique choisie pour les instructions de base de la VM. Vous pouvez la trouver dans le fichier [instructions.md](docs/fr_FR/instructions.md).
 
 ## Une liste d'exemples simples
 

@@ -89,7 +89,7 @@ Example :
 
 To demonstrate the use of the assembler and the VM, you can find some examples of assembly code in the `data/` folder.
 
-This files respect the semantic chosen for the basic instructions of the VM. You can find it in the file [instructions.md](docs/instructions.md).
+This files respect the semantic chosen for the basic instructions of the VM. You can find it in the file [instructions.md](docs/en_US/instructions.md).
 
 ## A list of simple examples
 
