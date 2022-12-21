@@ -1,100 +1,140 @@
-# Projet VM pour le cours d'Architecture des ordinateurs
+# mini-MIPS Project
 
-## Description
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/lbf38/mini-MIPS-project?style=plastic)](https://github.com/lbf38/mini-MIPS-project/releases/latest)
 
-Projet concernant le cours d'Architecture des ordinateurs de l'ENSTA Bretagne.
-Création d'une Machine Virtuelle pour comprendre le fonctionnement des ordinateurs et leur architecture interne.
-Création d'un assembleur en python pour convertir des instructions rédigées en assembleur, en un fichier binaire à exécuter sur la VM.
+**Documentation available in the following languages :**
 
-## Liste des instructions disponibles
+[![English documentation (en_US)](https://img.shields.io/badge/-en__US-blueviolet)](https://github.com/lbf38/mini-MIPS-project/docs/en_US/README.md)
+[![French documentation (fr_FR)](https://img.shields.io/badge/-fr__FR-blueviolet)](https://github.com/lbf38/mini-MIPS-project/docs/fr_FR/README.md)
 
-Lien vers le fichier qui contient l'ensemble des instructions disponibles dans la VM et reconnu par l'Assembleur :
-[Instructions](instructions.md)
+## Summary
 
-## Comment utiliser le projet
+- [mini-MIPS Project](#mini-mips-project)
+  - [Summary](#summary)
+  - [Short explanation of this project](#short-explanation-of-this-project)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Assembleur](#assembleur)
+    - [Virtual Machine](#virtual-machine)
+  - [Demonstration](#demonstration)
+  - [A list of simple examples](#a-list-of-simple-examples)
+  - [Ideas](#ideas)
+  - [Ressources](#ressources)
+  - [Credits](#credits)
+
+*****
+
+## Short explanation of this project
+
+This project is an academic project during the second year of study at ENSTA Bretagne (Brest, France).
+
+It aims to reproduce a simple version of the MIPS architecture (therefore the name "mini-MIPS") in order to understand the functioning of a computer and its internal architecture.
+
+It is composed of a virtual machine (VM) and an assembler.
+The first one is written in C and the second one in Python.
+
+## Installation
+
+1. To install the project, please clone this repository in a Linux environnement. You can use the following command :
+
+    ```bash
+    git clone https://github.com/LBF38/mini-MIPS-project.git
+    ```
+
+2. Then, you can go to the corresponding folder in your terminal and use the following command to compile the VM :
+
+    ```bash
+    make
+    ```
+
+3. You can now use the VM and the assembler.
+
+## Usage
 
 ### Assembleur
 
-Pour lancer l'assembleur, utiliser le format :
+To launch the assembler, use the format :
 
 ```bash
-./src/assembleur.py [dossier/source.txt] [dossier/destination.bin]
+./src/assembleur.py [folder/source.txt] [folder/destination.bin]
 ```
 
-Exemple :
+>**Note:** This command is executed in the project folder, for example under Linux : `~/mini-MIPS-project$`
+
+Example :
 
 ```bash
 ./src/assembleur.py data/asm.txt bin/asm.bin
 ```
 
-> Si vous ne mettez pas le nom du fichier de destination, par défaut l'assembleur écrira dans `bin/[nom source].bin`
+> If you don't specify the name of the destination file, by default the assembler will write in `bin/[source name].bin`
 
-### VM
+### Virtual Machine
 
-Pour lancer la VM, utiliser le format :
+To launch the VM, use the format :
 
 ```bash
 ./bin/vm bin/[source].bin
 ```
 
-Exemple :
+Example :
 
 ```bash
 ./bin/vm bin/asm.bin
 ```
 
-> Note: Vous pouvez compiler les fichiers de la VM (qui est en C) avec le makefile en utilisant `make`
+> **Note:** You can compile the VM files (which is in C) with the makefile using `make`
 
-### Remarques
+## Demonstration
 
-Ces commandes sont exécutés dans le dossier du projet soit par exemple sous Linux : `~/projet_VM_archiNum$`
+To demonstrate the use of the assembler and the VM, you can find some examples of assembly code in the `data/` folder.
 
-## Démonstration
+This files respect the semantic chosen for the basic instructions of the VM. You can find it in the file [instructions.md](docs/instructions.md).
 
-Pour démontrer l'utilisation de l'assembleur et de la VM, vous pourrez trouver des exemples de codes en assembleur dans le dossier `data/`.
-
-Ces fichiers respectent la sémantique choisie pour les instructions de base de la VM. Vous pouvez la retrouver dans le fichier [instructions.md](instructions.md).
-
-### Liste des fichiers d'exemples
+## A list of simple examples
 
 Je vais vous présenter les fichiers d'exemples que vous pouvez trouver dans le dossier `data/`, en vous donnant une courte explication de leur fonctionnement.
 
-- `asm.txt` : Ce fichier contient un exemple de code en assembleur. Il est utilisé pour démontrer l'utilisation de l'assembleur. Il permet de tester les commentaires, les instructions de base, les labels et les lignes vides.
-- `affiche12.txt` : Ce fichier contient un exemple de code en assembleur pour afficher 12 en effectuant une boucle de 12 itérations.
-- `factorial.txt` : Ce fichier contient un exemple de code en assembleur pour afficher le factoriel d'un nombre. On demande à l'utilisateur une valeur à calculer et on peut ainsi calculer la factorielle associée. On peut demander une valeur entre 0 et 12.
+In this part, I will present the files that you can find in the `data/` folder, giving you a short explanation of their functioning.
 
-> Pour ce programme, le facteur limitant est le stack pointer qui peut être trop faible par rapport à la valeur demandée par l'utilisateur.
-> A voir comment on peut améliorer cela en calculant une valeur de stack pointer plus grande en fonction de la valeur demandée par l'utilisateur et de la mémoire maximale disponible.
+- `asm.txt` : This file contains an example of assembly code. It is used to demonstrate the use of the assembler. It allows to test the comments, the basic instructions, the labels and the empty lines.
+- `affiche12.txt` : This file contains an example of assembly code to display 12 by performing a loop of 12 iterations.
+- `factorial.txt` : This file contains an example of assembly code to display the factorial of a number. The user is asked for a value to calculate and we can thus calculate the associated factorial. We can ask for a value between 0 and 12.
+
+> For this program, the limiting factor is the stack pointer which can be too low compared to the value requested by the user.
+> We can see to improve this by calculating a larger stack pointer value depending on the value requested by the user and the maximum available memory.
 >
-> On est également limité par la représentation des nombres. On ne peut pas dépasser 2^32-1 (4294967295) car on utilise un `uint32_t` pour stocker les nombres.
+> We are also limited by the representation of numbers. We cannot exceed 2^32-1 (4294967295) because we use a `uint32_t` to store the numbers.
 
-- `fibonnaci.txt` : Ce fichier contient un exemple de code en assembleur pour afficher la suite de Fibonnaci. Le code va demander une valeur à l'utilisateur et la suite de Fibonnaci sera calculée en fonction de cette valeur.
-  
-> Pour ce programme, le facteur limitant est le même que celui de `factorial.txt` : la représentation des nombres va conditionner la valeur maximale disponible à calculer et à afficher.
+- `fibonnaci.txt` : This file contains an example of assembly code to display the Fibonacci sequence. The code will ask the user for a value and the Fibonacci sequence will be calculated depending on this value.
 
-- `boucle.txt` : Ce fichier contient un exemple de code en assembleur pour lancer une boucle et afficher son indice.
-- `helloworld.txt` : Ce fichier contient un exemple de code en assembleur pour afficher "Hello World!".
+> For this program, the limiting factor is the same as for `factorial.txt`: the representation of numbers will condition the maximum value available to calculate and display.
 
-> Note: `helloworld.txt` ne fonctionne pas pour le moment car les données de type `string` ne sont pas encore reconnues ni traitées par l'assembleur.
+- `boucle.txt` : This file contains an example of assembly code to launch a loop and display its index.
+- `helloworld.txt` : This file contains an example of assembly code to display "Hello World!".
 
-- `instruction_test.txt` : Ce fichier contient l'ensemble des instructions disponibles dans ma sémantique d'asm. Il m'a permis de tester toutes les fonctions une à une et de vérifier leur fonctionnement, lorsque j'avais des problèmes d'implémentation.
+> Note: `helloworld.txt` does not work for the moment because the data of type `string` are not yet recognized or treated by the assembler.
 
-> Une meilleure méthode aurait été de faire des tests unitaires directement sur l'assembleur. Je les implémenterais si j'ai le temps. (voir [#10](https://github.com/LBF38/projet_VM_archiNum/issues/10))
+- `instruction_test.txt` : This file contains all the instructions available in my asm semantic. It allowed me to test all the functions one by one and to check their functioning, when I had implementation problems.
 
-### Autres idées de programme à réaliser
+> A better method would have been to make unit tests directly on the assembler. I would implement them if I have the time. (see [#10](https://github.com/LBF38/projet_VM_archiNum/issues/10))
 
-Vous trouverez ici quelques idées de programmes à réaliser en assembleur pour tester l'assembleur et la VM. Ces idées viennent du cours d'Architecture des ordinateurs de l'ENSTA Bretagne et des idées des professeurs.
+## Ideas
 
-- Calcul des points de la droite $y = ax + b$ à partir des paramètres fournis par l'utilisateur.
-- Calcul matriciel, multiplication matricielle.
-- Implémentation de l'Algorithme de Bresenham pour tracer une droite. ([Algorithme de Bresenham](https://fr.wikipedia.org/wiki/Algorithme_de_trac%C3%A9_de_segment_de_Bresenham))
-- Suite de Syracuse. ([Suite de Syracuse](https://fr.wikipedia.org/wiki/Suite_de_Syracuse))
+You will find here some ideas of programs to be made in assembly to test the assembler and the VM. These ideas come from the computer architecture course at ENSTA Bretagne and the ideas of the teachers.
+
+- Calculate the points of the line $y = ax + b$ from the parameters provided by the user.
+- Matrix calculation, matrix multiplication.
+- Implementation of the Bresenham algorithm to draw a line. ([Bresenham algorithm](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm))
+- Syracuse sequence. ([Syracuse sequence](https://en.wikipedia.org/wiki/Collatz_conjecture))
 
 ## Ressources
 
-Lien vers l'article "VM in C" : [Register VM in C](https://en.wikibooks.org/wiki/Creating_a_Virtual_Machine/Register_VM_in_C)
+- Link to the article "VM in C" : [Register VM in C](https://en.wikibooks.org/wiki/Creating_a_Virtual_Machine/Register_VM_in_C)
+- Link to another ressource "LC-3 VM": [LC-3 VM](https://www.jmeiners.com/lc3-vm/index.html)
 
-Lien vers une autre source "LC-3 VM": [LC-3 VM](https://www.jmeiners.com/lc3-vm/index.html)
+## Credits
 
-Table ASCII : \
-![Table ASCII](https://www.asciitable.com/asciifull.gif)
+This project was made by [Mathis URIEN (@LBF38)](https://github.com/lbf38), student in Design of Digital Sytems at ENSTA Bretagne.
+
+The course and project was given by ENSTA Bretagne's professors.
