@@ -1,11 +1,3 @@
-# default: vm lc3
-# vm: src/vm.c
-# 	gcc -Wall -g src/vm.c -o src/vm
-# 	./src/vm
-# lc3: src/lc3.c
-# 	gcc -Wall -g src/lc3.c -o src/lc3-vm
-# 	./src/lc3-vm
-
 # Choose your compiler (depending on your environment clang/gcc)
 CC=gcc
 
@@ -42,3 +34,7 @@ bin/%.o: src/%.c $(HEADERS)
 
 clean:
 	rm -f $(OBJECTS) womc
+
+documentation:
+	doxygen src/doxygen_config_assembleur
+	doxygen src/doxygen_config_vm
