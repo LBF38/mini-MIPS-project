@@ -7,9 +7,11 @@
 import re
 import struct
 import sys
+import os
+from os import path
 
 
-class Assembly():
+class Assembly:
     """Assembly class
     This class is used to assemble a file in asm format to a binary file
     """
@@ -327,6 +329,8 @@ class Assembly():
         """
         Write the binary file for the given instruction
         """
+        if not path.exists(path.dirname(destination)):  # creates output folder if it doesn't exist
+            os.mkdir(path.dirname(destination))
         out_file = open(destination, "wb")
         print(self.binary_instruction_list)
         for value in self.binary_instruction_list:
@@ -348,7 +352,7 @@ class Assembly():
         print(self.labels)
 
 
-class Encode():
+class Encode:
     def __init__(self, opcode, arg1, arg2, arg3, format) -> None:
         """
         Class constructor
